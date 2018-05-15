@@ -4,8 +4,8 @@ const app = express();
 
 var bot = linebot({
     channelId: "1580992358",
-    channelSecret: "bc8e776f80f6af75127579866f0a0bb8",
-    channelAccessToken: "BAnPhEiqEnOuioS/Ilb02DHCEWzFKSxlBw5TAsJMG+9InRB+UmjD2+D9wDyeuIzjaOfyORLJcH/kMbTj0ctZjfr4ZNnAXZckPWDUe03ByCj4byeSdo+0IS+JE269W78aDVqiG+qyDzO3vWJLPpOUDAdB04t89/1O/w1cDnyilFU="
+    channelSecret: process.env.CHANNEL_SECRET,
+    channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN
 });
 
 bot.on('message', function (event) {
