@@ -25,10 +25,7 @@ function _bot() {
             var msg = event.message.text;
             var replyMsg = '';
             if (msg == "/help") {
-                replyMsg = `
-                /我是誰: 查看我是誰,
-                /誰最帥: 查看誰最帥
-                `;
+                replyMsg = "/我是誰: 查看我是誰,\n/誰最帥: 查看誰最帥";
             } else if (msg == "/我是誰") {
                 waitForAjax = true;
                 event.source.profile().then(function (profile) {
