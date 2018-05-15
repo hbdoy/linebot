@@ -4,8 +4,8 @@ const app = express();
 
 var bot = linebot({
     channelId: "1580992358",
-    channelSecret: process.env.CHANNEL_SECRET,
-    channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN
+    channelSecret: process.env.channelSecret,
+    channelAccessToken: process.env.channelAccessToken
 });
 
 bot.on('message', function (event) {
