@@ -1,6 +1,5 @@
 var linebot = require('linebot');
 var express = require('express');
-const app = express();
 
 var bot = linebot({
     channelId: "1580992358",
@@ -8,15 +7,42 @@ var bot = linebot({
     channelAccessToken: process.env.channelAccessToken
 });
 
-bot.on('message', function (event) {
-    console.log(event); //把收到訊息的 event 印出來看看
-});
 
+_bot();
+const app = express();
 const linebotParser = bot.parser();
 app.post('/', linebotParser);
 
-//因為 express 預設走 port 3000，而 heroku 上預設卻不是，要透過下列程式轉換
 var server = app.listen(process.env.PORT || 8080, function () {
     var port = server.address().port;
     console.log("App now running on port", port);
 });
+
+function _bot() {
+    bot.on('message', function (event) {
+        if (event.message.type == 'text') {
+            waitForAjax = false;
+            var msg = event.message.text;
+            var replyMsg = '';
+            if (msg == "/help") {
+                replyMsg = `/我是誰: 查看我是誰,\n
+                /誰最帥: 查看誰最帥`;
+            } else if (msg == "/我是誰") {
+                waitForAjax = true;
+                event.source.profile().then(function (profile) {
+                    event.reply('Hello ' + profile.displayName);
+                });
+            } else if (msg == "/誰最帥") {
+                replyMsg = "李叡";
+            }
+            if(!waitForAjax){
+                event.reply(replyMsg).then(function (data) {
+                    console.log(replyMsg);
+                }).catch(function (error) {
+                    console.log('error');
+                });
+            }
+        }
+    });
+
+}
