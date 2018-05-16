@@ -73,7 +73,7 @@ function _getPosts(url){
             console.log(error);
             return;
         }
-        console.log(JSON.parse(body).data);
+        // console.log(JSON.parse(body).data);
         for (let value of JSON.parse(body).data){
             NCNUPosts.push(value);
         }
@@ -109,6 +109,7 @@ function _keepTokenAlive(){
             return;
         }
     });
+    console.log("reflash");
     //每分鐘刷新
     timerForToken = setInterval(_keepTokenAlive, 60000);
 }
