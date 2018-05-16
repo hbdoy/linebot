@@ -8,8 +8,9 @@ var bot = linebot({
     channelAccessToken: process.env.channelAccessToken
 });
 
-// var timer;
+var timer;
 var fbPosts = [];
+_keepTokenAlive();
 _getPosts();
 _botInit();
 
@@ -60,7 +61,7 @@ function _botInit() {
 
 function _getPosts(url){
     // clearTimeout(timer);
-    var myToken = "EAACEdEose0cBAEAJcFh0D1ImitnstS26WZBLex9IyAKVEe7X1C685mFIQK85sMIiPXVAKdOl83Oc3Ft3wa3tFHEAspPBfdBoS0pOAqhty7V1hBbdL0HknZA5DL7HZAKPV8KN4ZA6t5qEMNtZBpyJOB7J30viW9NvrHfpjYkvntnDYOTTbFH33Kix42MsWpb4ZD";
+    var myToken = "EAACEdEose0cBAF7GU6WkrJm1DOjuwZAU42uqMbZAQ4R1kYYSp8U9XZAmtEuLTeKnmbvXx4u6upuZCEUZBlCGAIUZB2PnNTYBMu7rBQbh7iywzPJ2WNA77xBvVlZAAoLy8l6QC8ypumBAZAjMg8W82qkPSLofa6p25gEJu4ozcDtjQshvjqm1GPTj9WN3NZBgtCxEZD";
     var pageID = 164784850554267;
     url = url || `https://graph.facebook.com/v3.0/${pageID}/posts?access_token=${myToken}`;
     request({
@@ -82,4 +83,22 @@ function _getPosts(url){
         // }
     });
     // timer = setInterval(_getJSON, 1800000); //每半小時抓取一次新資料
+}
+
+function _keepTokenAlive(){
+    clearTimeout(timer);
+    var myToken = "EAACEdEose0cBAF7GU6WkrJm1DOjuwZAU42uqMbZAQ4R1kYYSp8U9XZAmtEuLTeKnmbvXx4u6upuZCEUZBlCGAIUZB2PnNTYBMu7rBQbh7iywzPJ2WNA77xBvVlZAAoLy8l6QC8ypumBAZAjMg8W82qkPSLofa6p25gEJu4ozcDtjQshvjqm1GPTj9WN3NZBgtCxEZD";
+    var url = `https://graph.facebook.com/me?access_token=${myToken}`;
+    request({
+        url: url,
+        method: "GET"
+    }, function (error, response, body) {
+        if (error || !body) {
+            console.log("發生錯誤");
+            console.log(error);
+            return;
+        }
+    });
+    //每分鐘刷新
+    timer = setInterval(_keepTokenAlive, 60000);
 }
