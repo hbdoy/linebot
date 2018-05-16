@@ -17,9 +17,9 @@ const app = express();
 const linebotParser = bot.parser();
 app.post('/', linebotParser);
 
-app.get('/getPosts', function (req, res) {
-    _getPosts();
-})
+// app.get('/getPosts', function (req, res) {
+//     _getPosts();
+// })
 
 var server = app.listen(process.env.PORT || 8080, function () {
     var port = server.address().port;
