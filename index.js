@@ -8,8 +8,8 @@ var bot = linebot({
     channelAccessToken: process.env.channelAccessToken
 });
 
-var timer;
-var fbPosts = [];
+var timerForToken, timerForNCNU;
+var NCNUPosts = [];
 _keepTokenAlive();
 _getPosts();
 _botInit();
@@ -44,7 +44,7 @@ function _botInit() {
                 replyMsg = "李叡";
             }else if (msg == "/查看文章"){
                 for(let i = 0; i < 5; i++){
-                    replyMsg += fbPosts[i].message;
+                    replyMsg += NCNUPosts[i].message;
                     replyMsg += "\n------\n";
                 }
             }
@@ -60,7 +60,7 @@ function _botInit() {
 }
 
 function _getPosts(url){
-    // clearTimeout(timer);
+    clearTimeout(timerForNCNU);
     var myToken = "EAACEdEose0cBAF7GU6WkrJm1DOjuwZAU42uqMbZAQ4R1kYYSp8U9XZAmtEuLTeKnmbvXx4u6upuZCEUZBlCGAIUZB2PnNTYBMu7rBQbh7iywzPJ2WNA77xBvVlZAAoLy8l6QC8ypumBAZAjMg8W82qkPSLofa6p25gEJu4ozcDtjQshvjqm1GPTj9WN3NZBgtCxEZD";
     var pageID = 164784850554267;
     url = url || `https://graph.facebook.com/v3.0/${pageID}/posts?access_token=${myToken}`;
@@ -75,18 +75,19 @@ function _getPosts(url){
         }
         // console.log(JSON.parse(body).data);
         for (let value of JSON.parse(body).data){
-            fbPosts.push(value);
+            NCNUPosts.push(value);
         }
         // console.log(fbPosts[fbPosts.length - 1]);
         // if(response.next != ""){
         //     _getPosts(response.next);
         // }
     });
-    // timer = setInterval(_getJSON, 1800000); //每半小時抓取一次新資料
+    //每半小時抓取一次新資料
+    timer = setInterval(_getPosts, 1800000);
 }
 
 function _keepTokenAlive(){
-    clearTimeout(timer);
+    clearTimeout(timerForToken);
     var myToken = "EAACEdEose0cBAF7GU6WkrJm1DOjuwZAU42uqMbZAQ4R1kYYSp8U9XZAmtEuLTeKnmbvXx4u6upuZCEUZBlCGAIUZB2PnNTYBMu7rBQbh7iywzPJ2WNA77xBvVlZAAoLy8l6QC8ypumBAZAjMg8W82qkPSLofa6p25gEJu4ozcDtjQshvjqm1GPTj9WN3NZBgtCxEZD";
     var url = `https://graph.facebook.com/me?access_token=${myToken}`;
     request({
@@ -100,5 +101,5 @@ function _keepTokenAlive(){
         }
     });
     //每分鐘刷新
-    timer = setInterval(_keepTokenAlive, 60000);
+    timerForToken = setInterval(_keepTokenAlive, 60000);
 }
