@@ -42,8 +42,8 @@ function _botInit() {
             } else if (msg == "/誰最帥") {
                 replyMsg = "李叡";
             }else if (msg == "/查看文章"){
-                for(let value of fbPosts){
-                    replyMsg += value.message;
+                for(let i = 0; i < 5; i++){
+                    replyMsg += fbPosts[i].message;
                     replyMsg += "\n------\n";
                 }
             }
