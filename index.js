@@ -43,7 +43,8 @@ function _botInit() {
                 replyMsg = "李叡";
             }else if (msg == "/查看文章"){
                 for(let value of fbPosts){
-                    replyMsg += value.message + "--------";
+                    replyMsg += value.message;
+                    replyMsg += "\n------\n";
                 }
             }
             if(!waitForAjax){
