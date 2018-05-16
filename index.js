@@ -10,7 +10,7 @@ var bot = linebot({
 
 // var timer;
 var fbPosts = [];
-// _getPosts();
+_getPosts();
 _botInit();
 
 const app = express();
