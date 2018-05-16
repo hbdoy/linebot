@@ -3,7 +3,7 @@ var express = require('express');
 var request = require('request');
 
 var bot = linebot({
-    channelId: "1580992358",
+    channelId: process.env.channelID,
     channelSecret: process.env.channelSecret,
     channelAccessToken: process.env.channelAccessToken
 });
