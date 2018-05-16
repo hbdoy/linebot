@@ -83,7 +83,7 @@ function _getPosts(url){
         // }
     });
     //每半小時抓取一次新資料
-    timer = setInterval(_getPosts, 1800000);
+    timerForNCNU = setInterval(_getPosts, 1800000);
 }
 
 function _keepTokenAlive(){
