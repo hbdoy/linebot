@@ -100,7 +100,7 @@ function _botInit() {
         }
     });
     bot.on('join', function (event) {
-        event.reply("感謝您將本帳號設為好友！(happy)\n\n每天都有好多的靠北文\n不想全部看完(brr)\n但又想知道最近哪些靠北文比較火紅嗎？\n\n歡迎使用本懶人靠北包(glad)\n不知道要怎麼操作 ? 試試看輸入「指令」(ok)");
+        event.reply("感謝您將本帳號設為好友！ (happy) \n\n每天都有好多的靠北文\n不想全部看完(brr)\n但又想知道最近哪些靠北文比較火紅嗎？\n\n歡迎使用本懶人靠北包(glad)\n不知道要怎麼操作 ? 試試看輸入「指令」(ok)");
     });
 }
 
