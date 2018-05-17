@@ -81,7 +81,7 @@ function _botInit() {
                 }).catch(function (error) {
                     console.log('error');
                 });
-                bot.leaveRoom(tmpID);
+                bot.leaveRoom("C21beeabce21fc6f73af62158922e1d00");
             }
             if (!waitForAjax) {
                 event.reply(replyMsg).then(function (data) {
