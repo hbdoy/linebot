@@ -68,23 +68,21 @@ function _botInit() {
                 }
             } else if (msg == "滾") {
                 waitForAjax = true;
-                event.source.member().then(function (member) {
-                    console.log(member);
-                });
-                // var tmpID;
-                // if (event.source.groupId) {
-                //     tmpID = event.source.groupId;
-                // } else if (event.source.roomId) {
-                //     tmpID = event.source.roomId;
-                // }
-                // replyMsg = tmpID;
-                // // replyMsg = "我會再回來的";
-                // event.reply(replyMsg).then(function (data) {
-                //     console.log(replyMsg);
-                // }).catch(function (error) {
-                //     console.log('error');
-                // });
-                bot.leaveGroup("C21beeabce21fc6f73af62158922e1d00");
+                if (event.source.groupId) {
+                    replyMsg = "我會再回來的";
+                    event.reply(replyMsg);
+                    console.log(replyMsg);
+                    bot.leaveGroup(event.source.groupId);
+                } else if (event.source.roomId) {
+                    replyMsg = "我會再回來的";
+                    event.reply(replyMsg);
+                    console.log(replyMsg);
+                    bot.leaveRoom(event.source.roomId);
+                } else {
+                    replyMsg = "我在群組才會被踢掉喔 <3";
+                    event.reply(replyMsg);
+                    console.log(replyMsg);
+                }
             }
             if (!waitForAjax) {
                 event.reply(replyMsg).then(function (data) {
