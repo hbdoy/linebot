@@ -37,7 +37,7 @@ function _botInit() {
             var msg = event.message.text;
             var replyMsg = '';
             if (msg == "指令") {
-                replyMsg = "說明: 查看說明,\n我是誰: 查看我是誰,\n聯絡: 聯絡作者,\n抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章";
+                replyMsg = "說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章";
             } else if (msg == "說明") {
                 replyMsg = "沒有時間看靠北版?\n但又想知道最近大家再靠北什麼嗎?\n歡迎使用本機器人，幫您統整近期/一週/一個月內的熱門文章\n(熱門文章: 透過演算法評量按讚、留言、分享數)\n用法: 直接輸入想使用的指令即可，ex: 抓\n這是閒暇之餘的作品，部屬在免費空間，若速度緩慢或無反應請稍後再試\n當然也歡迎小額donate，將會用在伺服器升級";
             } else if (msg == "我是誰") {
@@ -47,6 +47,11 @@ function _botInit() {
                 });
             } else if (msg == "聯絡") {
                 replyMsg = "開放許願功能，另外有任何問題都歡迎與我聯繫\nfelicity860128@gmail.com";
+            } else if (msg == "誰最帥") {
+                for (let i = 0; i < 5; i++) {
+                    replyMsg = "李叡";
+                }
+            } else if (msg == "抓週") {
             } else if (msg == "抓") {
                 for (let i = 0; i < 5; i++) {
                     replyMsg += NCNUPosts[i].message;
