@@ -11,7 +11,9 @@ var bot = linebot({
 
 var timerForNCNU, timerForToken;
 var myToken = '';
-var NCNUPosts = [];
+var NCNUPosts = [],
+    NCNUPostsW = [],
+    NCNUPostsM = [];
 reflashToken();
 _botInit();
 
@@ -34,19 +36,31 @@ function _botInit() {
             var waitForAjax = false;
             var msg = event.message.text;
             var replyMsg = '';
-            if (msg == "/help") {
-                replyMsg = "/我是誰: 查看我是誰,\n/誰最帥: 查看誰最帥,\n/查看文章: 查看最近文章";
-            } else if (msg == "/我是誰") {
+            if (msg == "指令") {
+                replyMsg = "公告: 查看公告,\n我是誰: 查看我是誰,\n聯絡: 聯絡作者,\n抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章";
+            } else if (msg == "公告") {
+                replyMsg = "這是閒暇之餘的作品，部屬在免費空間，若速度緩慢或無反應請稍後再試\n當然也歡迎小額donate，將會用在伺服器升級";
+            } else if (msg == "我是誰") {
                 waitForAjax = true;
                 event.source.profile().then(function (profile) {
                     event.reply('Hello ' + profile.displayName);
                 });
-            } else if (msg == "/誰最帥") {
-                replyMsg = "李叡";
-            } else if (msg == "/查看文章") {
+            } else if (msg == "聯絡") {
+                replyMsg = "開放許願功能，另外有任何問題都歡迎與我聯繫\nfelicity860128@gmail.com";
+            } else if (msg == "抓") {
                 for (let i = 0; i < 5; i++) {
                     replyMsg += NCNUPosts[i].message;
-                    replyMsg += "\n------\n";
+                    replyMsg += "\n---------\n";
+                }
+            } else if (msg == "抓週") {
+                for (let i = 0; i < 5; i++) {
+                    replyMsg += NCNUPostsW[i].message;
+                    replyMsg += "\n---------\n";
+                }
+            } else if (msg == "抓月") {
+                for (let i = 0; i < 5; i++) {
+                    replyMsg += NCNUPostsM[i].message;
+                    replyMsg += "\n---------\n";
                 }
             }
             if (!waitForAjax) {
@@ -75,23 +89,131 @@ function _getPosts(url) {
         // console.log(JSON.parse(body).error.message);
         if (JSON.parse(body).data) {
             for (let value of JSON.parse(body).data) {
+                var like = 0,
+                    comm = 0,
+                    share = 0;
+                if (value.likes.summary.total_count) {
+                    like = value.likes.summary.total_count;
+                }
+                if (value.comments.summary.total_count) {
+                    comm = value.comments.summary.total_count;
+                }
+                if (value.shares) {
+                    share = value.shares.count;
+                }
+                value.hot = like * 1 + comm * 2 + share * 3;
                 NCNUPosts.push(value);
             }
+            // 按熱度由高至低
+            NCNUPosts = NCNUPosts.sort(function (a, b) {
+                return a.hot < b.hot ? 1 : -1;
+            });
             // console.log(NCNUPosts);
         }
-        // console.log(NCNUPosts[NCNUPosts.length - 1]);
-        // var currTime = Date.parse(new Date().toDateString());
-        // var lastTime = Date.parse(NCNUPosts[NCNUPosts.length - 1].created_time);
-        // var weekSec = 7 * 24 * 60 * 60 * 1000;
+    });
+}
+
+function _getPostsM(url) {
+    var pageID = 164784850554267;
+    url = url || `https://graph.facebook.com/v3.0/${pageID}/posts?fields=message,comments.summary(true),likes.summary(true),shares,created_time&access_token=${myToken}`;
+    request({
+        url: url,
+        method: "GET"
+    }, function (error, response, body) {
+        if (error || !body) {
+            console.log("發生錯誤");
+            console.log(error);
+            return;
+        }
+        // console.log(JSON.parse(body).error.message);
+        if (JSON.parse(body).data) {
+            for (let value of JSON.parse(body).data) {
+                var like = 0,
+                    comm = 0,
+                    share = 0;
+                if (value.likes.summary.total_count) {
+                    like = value.likes.summary.total_count;
+                }
+                if (value.comments.summary.total_count) {
+                    comm = value.comments.summary.total_count;
+                }
+                if (value.shares) {
+                    share = value.shares.count;
+                }
+                value.hot = like * 1 + comm * 2 + share * 3;
+                NCNUPostsM.push(value);
+            }
+            // 按熱度由高至低
+            NCNUPostsM = NCNUPostsM.sort(function (a, b) {
+                return a.hot < b.hot ? 1 : -1;
+            });
+            // console.log(NCNUPostsM);
+        }
+        // console.log(NCNUPostsM[NCNUPostsM.length - 1]);
+        var currTime = Date.parse(new Date().toDateString());
+        var lastTime = Date.parse(NCNUPostsM[NCNUPostsM.length - 1].created_time);
+        var monthSec = 30 * 24 * 60 * 60 * 1000;
         // console.log(lastTime);
         // console.log(currTime);
-        // if (lastTime >= (currTime - weekSec)){
-        //     // 最後一筆仍在7天內,且還有下一頁的文章,則再抓取
-        //     // console.log(JSON.parse(body).paging.next);
-        //     if (JSON.parse(body).paging.next != ""){
-        //         _getPosts(JSON.parse(body).paging.next);
-        //     }
-        // }
+        if (lastTime >= (currTime - monthSec)) {
+            // 最後一筆仍在7天內,且還有下一頁的文章,則再抓取
+            // console.log(JSON.parse(body).paging.next);
+            if (JSON.parse(body).paging.next != "") {
+                _getPostsM(JSON.parse(body).paging.next);
+            }
+        }
+    });
+}
+
+function _getPostsW(url) {
+    var pageID = 164784850554267;
+    url = url || `https://graph.facebook.com/v3.0/${pageID}/posts?fields=message,comments.summary(true),likes.summary(true),shares,created_time&access_token=${myToken}`;
+    request({
+        url: url,
+        method: "GET"
+    }, function (error, response, body) {
+        if (error || !body) {
+            console.log("發生錯誤");
+            console.log(error);
+            return;
+        }
+        // console.log(JSON.parse(body).error.message);
+        if (JSON.parse(body).data) {
+            for (let value of JSON.parse(body).data) {
+                var like = 0,
+                    comm = 0,
+                    share = 0;
+                if (value.likes.summary.total_count) {
+                    like = value.likes.summary.total_count;
+                }
+                if (value.comments.summary.total_count) {
+                    comm = value.comments.summary.total_count;
+                }
+                if (value.shares) {
+                    share = value.shares.count;
+                }
+                value.hot = like * 1 + comm * 2 + share * 3;
+                NCNUPostsW.push(value);
+            }
+            // 按熱度由高至低
+            NCNUPostsW = NCNUPostsW.sort(function (a, b) {
+                return a.hot < b.hot ? 1 : -1;
+            });
+            // console.log(NCNUPostsW);
+        }
+        // console.log(NCNUPosts[NCNUPosts.length - 1]);
+        var currTime = Date.parse(new Date().toDateString());
+        var lastTime = Date.parse(NCNUPostsW[NCNUPostsW.length - 1].created_time);
+        var weekSec = 7 * 24 * 60 * 60 * 1000;
+        // console.log(lastTime);
+        // console.log(currTime);
+        if (lastTime >= (currTime - weekSec)) {
+            // 最後一筆仍在7天內,且還有下一頁的文章,則再抓取
+            // console.log(JSON.parse(body).paging.next);
+            if (JSON.parse(body).paging.next != "") {
+                _getPostsW(JSON.parse(body).paging.next);
+            }
+        }
     });
 }
 
@@ -112,6 +234,8 @@ function reflashToken() {
             myToken = finalKey[0];
             console.log("Reflash!");
             _getPosts();
+            _getPostsW();
+            _getPostsM();
         })
     // 每20分鐘抓取一次新資料
     timerForToken = setInterval(reflashToken, 1200000);
