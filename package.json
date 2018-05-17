@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.16.3",
     "linebot": "^1.4.1",
-    "request": "^2.86.0"
+    "request": "^2.86.0",
+    "superagent": "^3.8.3"
   }
 }
