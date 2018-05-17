@@ -52,19 +52,22 @@ function _botInit() {
                     replyMsg = "李叡";
                 }
             } else if (msg == "抓週") {} else if (msg == "抓") {
+                replyMsg = [];
                 for (let i = 0; i < 5; i++) {
-                    replyMsg += NCNUPosts[i].message;
-                    replyMsg += "\n---------\n";
+                    replyMsg.push(NCNUPosts[i].message);
+                    // replyMsg += "\n---------\n";
                 }
             } else if (msg == "抓週") {
+                replyMsg = [];
                 for (let i = 0; i < 5; i++) {
-                    replyMsg += NCNUPostsW[i].message;
-                    replyMsg += "\n---------\n";
+                    replyMsg.push(NCNUPostsW[i].message);
+                    // replyMsg += "\n---------\n";
                 }
             } else if (msg == "抓月") {
+                replyMsg = [];
                 for (let i = 0; i < 5; i++) {
-                    replyMsg += NCNUPostsM[i].message;
-                    replyMsg += "\n---------\n";
+                    replyMsg.push(NCNUPostsM[i].message);
+                    // replyMsg += "\n---------\n";
                 }
             } else if (msg == "滾") {
                 waitForAjax = true;
