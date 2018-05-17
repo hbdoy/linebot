@@ -74,7 +74,8 @@ function _botInit() {
                 } else if (event.source.roomId) {
                     tmpID = event.source.roomId;
                 }
-                replyMsg = "我會再回來的";
+                replyMsg = tmpID;
+                // replyMsg = "我會再回來的";
                 event.reply(replyMsg).then(function (data) {
                     console.log(replyMsg);
                 }).catch(function (error) {
