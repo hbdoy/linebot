@@ -64,7 +64,7 @@ function _botInit() {
             } else if (msg == "抓月") {
                 replyMsg = [];
                 for (let i = 0; i < 5; i++) {
-                    replyMsg.push(NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url);
+                    replyMsg.push(NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url);
                 }
             } else if (msg == "滾") {
                 waitForAjax = true;
