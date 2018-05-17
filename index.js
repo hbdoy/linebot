@@ -70,14 +70,20 @@ function _botInit() {
                 waitForAjax = true;
                 if (event.source.groupId) {
                     replyMsg = "我會再回來的";
-                    event.reply(replyMsg);
-                    console.log(replyMsg);
-                    bot.leaveGroup(event.source.groupId);
+                    event.reply(replyMsg).then(function (data) {
+                        console.log(replyMsg);
+                        bot.leaveGroup(event.source.groupId);
+                    }).catch(function (error) {
+                        console.log('error');
+                    });
                 } else if (event.source.roomId) {
                     replyMsg = "我會再回來的";
-                    event.reply(replyMsg);
-                    console.log(replyMsg);
-                    bot.leaveRoom(event.source.roomId);
+                    event.reply(replyMsg).then(function (data) {
+                        console.log(replyMsg);
+                        bot.leaveRoom(event.source.roomId);
+                    }).catch(function (error) {
+                        console.log('error');
+                    });
                 } else {
                     replyMsg = "我在群組才會被踢掉喔 <3";
                     event.reply(replyMsg);
