@@ -51,8 +51,7 @@ function _botInit() {
                 for (let i = 0; i < 5; i++) {
                     replyMsg = "李叡";
                 }
-            } else if (msg == "抓週") {
-            } else if (msg == "抓") {
+            } else if (msg == "抓週") {} else if (msg == "抓") {
                 for (let i = 0; i < 5; i++) {
                     replyMsg += NCNUPosts[i].message;
                     replyMsg += "\n---------\n";
@@ -67,13 +66,12 @@ function _botInit() {
                     replyMsg += NCNUPostsM[i].message;
                     replyMsg += "\n---------\n";
                 }
-            }
             } else if (msg == "滾") {
                 waitForAjax = true;
                 var tmpID;
-                if (event.source.groupId){
+                if (event.source.groupId) {
                     tmpID = event.source.groupId;
-                } else if (event.source.roomId){
+                } else if (event.source.roomId) {
                     tmpID = event.source.roomId;
                 }
                 replyMsg = "我會再回來的";
