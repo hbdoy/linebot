@@ -190,7 +190,7 @@ function _getPostsM(url) {
         if (lastTime >= (currTime - monthSec)) {
             // 最後一筆仍在7天內,且還有下一頁的文章,則再抓取
             // console.log(JSON.parse(body).paging.next);
-            if (JSON.parse(body).paging.next != "") {
+            if (JSON.parse(body).paging.next) {
                 _getPostsM(JSON.parse(body).paging.next);
             }
         }
@@ -243,7 +243,7 @@ function _getPostsW(url) {
         if (lastTime >= (currTime - weekSec)) {
             // 最後一筆仍在7天內,且還有下一頁的文章,則再抓取
             // console.log(JSON.parse(body).paging.next);
-            if (JSON.parse(body).paging.next != "") {
+            if (JSON.parse(body).paging.next) {
                 _getPostsW(JSON.parse(body).paging.next);
             }
         }
