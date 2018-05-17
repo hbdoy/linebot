@@ -51,23 +51,20 @@ function _botInit() {
                 for (let i = 0; i < 5; i++) {
                     replyMsg = "李叡";
                 }
-            } else if (msg == "抓週") {} else if (msg == "抓") {
+            } else if (msg == "抓") {
                 replyMsg = [];
                 for (let i = 0; i < 5; i++) {
-                    replyMsg.push(NCNUPosts[i].message);
-                    // replyMsg += "\n---------\n";
+                    replyMsg.push(NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url);
                 }
             } else if (msg == "抓週") {
                 replyMsg = [];
                 for (let i = 0; i < 5; i++) {
-                    replyMsg.push(NCNUPostsW[i].message);
-                    // replyMsg += "\n---------\n";
+                    replyMsg.push(NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url);
                 }
             } else if (msg == "抓月") {
                 replyMsg = [];
                 for (let i = 0; i < 5; i++) {
-                    replyMsg.push(NCNUPostsM[i].message);
-                    // replyMsg += "\n---------\n";
+                    replyMsg.push(NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url);
                 }
             } else if (msg == "滾") {
                 waitForAjax = true;
@@ -135,6 +132,7 @@ function _getPosts(url) {
                     share = value.shares.count;
                 }
                 value.hot = like * 1 + comm * 2 + share * 3;
+                value.url = value.id.split("_")[1];
                 NCNUPosts.push(value);
             }
             // 按熱度由高至低
@@ -174,6 +172,7 @@ function _getPostsM(url) {
                     share = value.shares.count;
                 }
                 value.hot = like * 1 + comm * 2 + share * 3;
+                value.url = value.id.split("_")[1];
                 NCNUPostsM.push(value);
             }
             // 按熱度由高至低
@@ -226,6 +225,7 @@ function _getPostsW(url) {
                     share = value.shares.count;
                 }
                 value.hot = like * 1 + comm * 2 + share * 3;
+                value.url = value.id.split("_")[1];
                 NCNUPostsW.push(value);
             }
             // 按熱度由高至低
