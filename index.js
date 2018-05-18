@@ -140,6 +140,13 @@ function _getPosts(url) {
                 return a.hot < b.hot ? 1 : -1;
             });
             // console.log(NCNUPosts);
+            if (NCNUPosts.length < 25) {
+                // 近期文章數量小於25,且還有下一頁的文章,則再抓取
+                // console.log(JSON.parse(body).paging.next);
+                if (JSON.parse(body).paging.next) {
+                    _getPosts(JSON.parse(body).paging.next);
+                }
+            }
         }
     });
 }
