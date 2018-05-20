@@ -23,17 +23,17 @@ app.post('/', linebotParser);
 
 app.get('/', function (req, res) {
     var status = {};
-    if (NCNUPosts > 0) {
+    if (NCNUPosts.length > 0) {
         status.NCNUPosts = "normal"
     } else {
         status.NCNUPosts = "something error"
     }
-    if (NCNUPostsW > 0) {
+    if (NCNUPostsW.length > 0) {
         status.NCNUPostsW = "normal"
     } else {
         status.NCNUPostsW = "something error"
     }
-    if (NCNUPostsM > 0) {
+    if (NCNUPostsM.length > 0) {
         status.NCNUPostsM = "normal"
     } else {
         status.NCNUPostsM = "something error"
