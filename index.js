@@ -21,9 +21,26 @@ const app = express();
 const linebotParser = bot.parser();
 app.post('/', linebotParser);
 
-// app.get('/getPosts', function (req, res) {
-//     reflashToken();
-// })
+app.get('/', function (req, res) {
+    var status = {};
+    if (NCNUPosts > 0) {
+        status.NCNUPosts = "normal"
+    } else {
+        status.NCNUPosts = "something error"
+    }
+    if (NCNUPostsW > 0) {
+        status.NCNUPostsW = "normal"
+    } else {
+        status.NCNUPostsW = "something error"
+    }
+    if (NCNUPostsM > 0) {
+        status.NCNUPostsM = "normal"
+    } else {
+        status.NCNUPostsM = "something error"
+    }
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.status(200).send(JSON.stringify(status));
+})
 
 var server = app.listen(process.env.PORT || 3000, function () {
     var port = server.address().port;
