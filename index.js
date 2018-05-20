@@ -72,8 +72,8 @@ function _botInit() {
                 replyMsg = [];
                 if (NCNUPosts.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
-                } else if (NCNUPosts.length >= 8) {
-                    for (let i = 0; i < 8; i++) {
+                } else if (NCNUPosts.length >= 5) {
+                    for (let i = 0; i < 5; i++) {
                         replyMsg.push(NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url);
                     }
                 } else {
@@ -85,8 +85,8 @@ function _botInit() {
                 replyMsg = [];
                 if (NCNUPostsW.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
-                } else if (NCNUPostsW.length >= 8) {
-                    for (let i = 0; i < 8; i++) {
+                } else if (NCNUPostsW.length >= 5) {
+                    for (let i = 0; i < 5; i++) {
                         replyMsg.push(NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url);
                     }
                 } else {
@@ -98,8 +98,8 @@ function _botInit() {
                 replyMsg = [];
                 if (NCNUPostsM.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
-                } else if (NCNUPostsM.length >= 8) {
-                    for (let i = 0; i < 8; i++) {
+                } else if (NCNUPostsM.length >= 5) {
+                    for (let i = 0; i < 5; i++) {
                         replyMsg.push(NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url);
                     }
                 } else {
@@ -132,8 +132,10 @@ function _botInit() {
                 }
             }
             if (!waitForAjax) {
-                event.reply(replyMsg).then(function (data) {
-                    console.log(replyMsg);
+                event.reply("123").then(function (data) {
+                    event.reply("456").then(function (data) {
+                        console.log(replyMsg);
+                    })
                 }).catch(function (error) {
                     console.log('error');
                 });
