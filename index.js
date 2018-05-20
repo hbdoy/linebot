@@ -53,7 +53,7 @@ function _botInit() {
             var waitForAjax = false;
             var msg = event.message.text;
             var replyMsg = '';
-            var counter = 0;
+            var counter = '';
             if (msg == "功能") {
                 replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n滾: 嗚嗚...";
             } else if (msg == "說明") {
@@ -70,7 +70,7 @@ function _botInit() {
             } else if (msg == "抓") {
                 console.log(NCNUPosts.length);
                 replyMsg = [];
-                counter = 0;
+                counter = "";
                 if (NCNUPosts.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
                 } else if (NCNUPosts.length >= 5) {
@@ -93,7 +93,7 @@ function _botInit() {
             } else if (msg == "抓週") {
                 console.log(NCNUPostsW.length);
                 replyMsg = [];
-                counter = 0;
+                counter = "";
                 if (NCNUPostsW.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
                 } else if (NCNUPostsW.length >= 5) {
@@ -116,7 +116,7 @@ function _botInit() {
             } else if (msg == "抓月") {
                 console.log(NCNUPostsM.length);
                 replyMsg = [];
-                counter = 0;
+                counter = "";
                 if (NCNUPostsM.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
                 } else if (NCNUPostsM.length >= 5) {
