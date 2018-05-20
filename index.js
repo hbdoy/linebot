@@ -108,7 +108,6 @@ function _botInit() {
                     }
                 } else {
                     for (let i = 0; i < NCNUPostsW.length; i++) {
-                        console.log(NCNUPostsM.length);
                         counter += NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url;
                         if (counter.length > 2500) {
                             break;
@@ -117,6 +116,7 @@ function _botInit() {
                     }
                 }
             } else if (msg == "抓月") {
+                console.log(NCNUPostsM.length);
                 replyMsg = [];
                 counter = 0;
                 if (NCNUPostsM.length <= 0) {
