@@ -76,7 +76,7 @@ function _botInit() {
                 } else if (NCNUPosts.length >= 5) {
                     for (let i = 0; i < 5; i++) {
                         counter += NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url;
-                        if(counter > 2500){
+                        if (counter > 2500) {
                             break;
                         }
                         replyMsg.push(NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url);
@@ -205,11 +205,6 @@ function _getPosts(url) {
                 value.url = value.id.split("_")[1];
                 NCNUPosts.push(value);
             }
-            // 按熱度由高至低
-            NCNUPosts = NCNUPosts.sort(function (a, b) {
-                return a.hot < b.hot ? 1 : -1;
-            });
-            // console.log(NCNUPosts[NCNUPosts.length - 1]);
             // var currTime = Date.parse(new Date().toDateString());
             // 當日時間改以po文時間為準,而不是系統時間
             var currTime = Date.parse(NCNUPosts[0].created_time);
@@ -223,6 +218,11 @@ function _getPosts(url) {
                 if (JSON.parse(body).paging.next) {
                     _getPosts(JSON.parse(body).paging.next);
                 }
+            } else {
+                // 按熱度由高至低
+                NCNUPosts = NCNUPosts.sort(function (a, b) {
+                    return a.hot < b.hot ? 1 : -1;
+                });
             }
         }
     });
@@ -259,11 +259,6 @@ function _getPostsM(url) {
                 value.url = value.id.split("_")[1];
                 NCNUPostsM.push(value);
             }
-            // 按熱度由高至低
-            NCNUPostsM = NCNUPostsM.sort(function (a, b) {
-                return a.hot < b.hot ? 1 : -1;
-            });
-            // console.log(NCNUPostsM[NCNUPostsM.length - 1]);
             // var currTime = Date.parse(new Date().toDateString());
             var currTime = Date.parse(NCNUPostsM[0].created_time);
             var lastTime = Date.parse(NCNUPostsM[NCNUPostsM.length - 1].created_time);
@@ -276,6 +271,11 @@ function _getPostsM(url) {
                 if (JSON.parse(body).paging.next) {
                     _getPostsM(JSON.parse(body).paging.next);
                 }
+            } else {
+                // 按熱度由高至低
+                NCNUPostsM = NCNUPostsM.sort(function (a, b) {
+                    return a.hot < b.hot ? 1 : -1;
+                });
             }
         }
     });
@@ -312,11 +312,6 @@ function _getPostsW(url) {
                 value.url = value.id.split("_")[1];
                 NCNUPostsW.push(value);
             }
-            // 按熱度由高至低
-            NCNUPostsW = NCNUPostsW.sort(function (a, b) {
-                return a.hot < b.hot ? 1 : -1;
-            });
-            // console.log(NCNUPostsW[NCNUPostsW.length - 1]);
             // var currTime = Date.parse(new Date().toDateString());
             var currTime = Date.parse(NCNUPostsW[0].created_time);
             var lastTime = Date.parse(NCNUPostsW[NCNUPostsW.length - 1].created_time);
@@ -329,6 +324,11 @@ function _getPostsW(url) {
                 if (JSON.parse(body).paging.next) {
                     _getPostsW(JSON.parse(body).paging.next);
                 }
+            } else {
+                // 按熱度由高至低
+                NCNUPostsW = NCNUPostsW.sort(function (a, b) {
+                    return a.hot < b.hot ? 1 : -1;
+                });
             }
         }
     });
@@ -358,6 +358,6 @@ function reflashToken() {
             _getPostsW();
             _getPostsM();
         })
-    // 每20分鐘抓取一次新資料
-    timerForToken = setInterval(reflashToken, 1200000);
+    // 每10分鐘抓取一次新資料
+    timerForToken = setInterval(reflashToken, 600000);
 }
