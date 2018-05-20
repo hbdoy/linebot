@@ -53,6 +53,7 @@ function _botInit() {
             var waitForAjax = false;
             var msg = event.message.text;
             var replyMsg = '';
+            var counter = 0;
             if (msg == "功能") {
                 replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n滾: 嗚嗚...";
             } else if (msg == "說明") {
@@ -70,40 +71,67 @@ function _botInit() {
                 }
             } else if (msg == "抓") {
                 replyMsg = [];
+                counter = 0;
                 if (NCNUPosts.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
-                } else if (NCNUPosts.length >= 5) {
-                    for (let i = 0; i < 5; i++) {
+                } else if (NCNUPosts.length >= 8) {
+                    for (let i = 0; i < 8; i++) {
+                        counter += NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url;
+                        if(counter > 2500){
+                            break;
+                        }
                         replyMsg.push(NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url);
                     }
                 } else {
                     for (let i = 0; i < NCNUPosts.length; i++) {
+                        counter += NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url;
+                        if (counter > 2500) {
+                            break;
+                        }
                         replyMsg.push(NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url);
                     }
                 }
             } else if (msg == "抓週") {
                 replyMsg = [];
+                counter = 0;
                 if (NCNUPostsW.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
-                } else if (NCNUPostsW.length >= 5) {
-                    for (let i = 0; i < 5; i++) {
+                } else if (NCNUPostsW.length >= 8) {
+                    for (let i = 0; i < 8; i++) {
+                        counter += NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url;
+                        if (counter > 2500) {
+                            break;
+                        }
                         replyMsg.push(NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url);
                     }
                 } else {
                     for (let i = 0; i < NCNUPostsW.length; i++) {
+                        counter += NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url;
+                        if (counter > 2500) {
+                            break;
+                        }
                         replyMsg.push(NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url);
                     }
                 }
             } else if (msg == "抓月") {
                 replyMsg = [];
+                counter = 0;
                 if (NCNUPostsM.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
-                } else if (NCNUPostsM.length >= 5) {
-                    for (let i = 0; i < 5; i++) {
+                } else if (NCNUPostsM.length >= 8) {
+                    for (let i = 0; i < 8; i++) {
+                        counter += NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url;
+                        if (counter > 2500) {
+                            break;
+                        }
                         replyMsg.push(NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url);
                     }
                 } else {
                     for (let i = 0; i < NCNUPostsM.length; i++) {
+                        counter += NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url;
+                        if (counter > 2500) {
+                            break;
+                        }
                         replyMsg.push(NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url);
                     }
                 }
@@ -132,10 +160,8 @@ function _botInit() {
                 }
             }
             if (!waitForAjax) {
-                event.reply("123").then(function (data) {
-                    event.reply("456").then(function (data) {
-                        console.log(replyMsg);
-                    })
+                event.reply(replyMsg).then(function (data) {
+                    console.log(replyMsg);
                 }).catch(function (error) {
                     console.log('error');
                 });
