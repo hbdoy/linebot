@@ -64,7 +64,7 @@ function _botInit() {
                     event.reply('Hello ' + profile.displayName);
                 });
             } else if (msg == "聯絡") {
-                replyMsg = "開放許願功能，另外有任何問題都歡迎與我聯繫\nfelicity860128@gmail.com";
+                replyMsg = "開放許願功能，另外有任何問題都歡迎與我聯繫\ncowpei@protonmail.com";
             } else if (msg == "誰最帥") {
                 replyMsg = "李叡";
             } else if (msg == "抓") {
