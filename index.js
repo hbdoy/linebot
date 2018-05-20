@@ -66,17 +66,15 @@ function _botInit() {
             } else if (msg == "聯絡") {
                 replyMsg = "開放許願功能，另外有任何問題都歡迎與我聯繫\nfelicity860128@gmail.com";
             } else if (msg == "誰最帥") {
-                for (let i = 0; i < 5; i++) {
-                    replyMsg = "李叡";
-                }
+                replyMsg = "李叡";
             } else if (msg == "抓") {
                 console.log(NCNUPosts.length);
                 replyMsg = [];
                 counter = 0;
                 if (NCNUPosts.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
-                } else if (NCNUPosts.length >= 6) {
-                    for (let i = 0; i < 6; i++) {
+                } else if (NCNUPosts.length >= 5) {
+                    for (let i = 0; i < 5; i++) {
                         counter += NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url;
                         if(counter > 2500){
                             break;
@@ -98,8 +96,8 @@ function _botInit() {
                 counter = 0;
                 if (NCNUPostsW.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
-                } else if (NCNUPostsW.length >= 6) {
-                    for (let i = 0; i < 6; i++) {
+                } else if (NCNUPostsW.length >= 5) {
+                    for (let i = 0; i < 5; i++) {
                         counter += NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url;
                         if (counter.length > 2500) {
                             break;
@@ -121,8 +119,8 @@ function _botInit() {
                 counter = 0;
                 if (NCNUPostsM.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
-                } else if (NCNUPostsM.length >= 6) {
-                    for (let i = 0; i < 6; i++) {
+                } else if (NCNUPostsM.length >= 5) {
+                    for (let i = 0; i < 5; i++) {
                         counter += NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url;
                         if (counter.length > 2500) {
                             break;
