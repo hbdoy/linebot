@@ -53,18 +53,42 @@ function _botInit() {
                 }
             } else if (msg == "抓") {
                 replyMsg = [];
-                for (let i = 0; i < 5; i++) {
-                    replyMsg.push(NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url);
+                if (NCNUPosts.length <= 0) {
+                    replyMsg = "現在沒有文章，請稍後再試...";
+                } else if (NCNUPosts.length >= 8) {
+                    for (let i = 0; i < 8; i++) {
+                        replyMsg.push(NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url);
+                    }
+                } else {
+                    for (let i = 0; i < NCNUPosts.length; i++) {
+                        replyMsg.push(NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url);
+                    }
                 }
             } else if (msg == "抓週") {
                 replyMsg = [];
-                for (let i = 0; i < 5; i++) {
-                    replyMsg.push(NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url);
+                if (NCNUPostsW.length <= 0) {
+                    replyMsg = "現在沒有文章，請稍後再試...";
+                } else if (NCNUPostsW.length >= 8) {
+                    for (let i = 0; i < 8; i++) {
+                        replyMsg.push(NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url);
+                    }
+                } else {
+                    for (let i = 0; i < NCNUPostsW.length; i++) {
+                        replyMsg.push(NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url);
+                    }
                 }
             } else if (msg == "抓月") {
                 replyMsg = [];
-                for (let i = 0; i < 5; i++) {
-                    replyMsg.push(NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url);
+                if (NCNUPostsM.length <= 0) {
+                    replyMsg = "現在沒有文章，請稍後再試...";
+                } else if (NCNUPostsM.length >= 8) {
+                    for (let i = 0; i < 8; i++) {
+                        replyMsg.push(NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url);
+                    }
+                } else {
+                    for (let i = 0; i < NCNUPostsM.length; i++) {
+                        replyMsg.push(NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url);
+                    }
                 }
             } else if (msg == "滾") {
                 waitForAjax = true;
@@ -139,9 +163,14 @@ function _getPosts(url) {
             NCNUPosts = NCNUPosts.sort(function (a, b) {
                 return a.hot < b.hot ? 1 : -1;
             });
-            // console.log(NCNUPosts);
-            if (NCNUPosts.length < 25) {
-                // 近期文章數量小於25,且還有下一頁的文章,則再抓取
+            // console.log(NCNUPosts[NCNUPosts.length - 1]);
+            var currTime = Date.parse(new Date().toDateString());
+            var lastTime = Date.parse(NCNUPosts[NCNUPosts.length - 1].created_time);
+            var daySec = 2 * 24 * 60 * 60 * 1000;
+            // console.log(lastTime);
+            // console.log(currTime);
+            if (lastTime >= (currTime - daySec)) {
+                // 最後一筆仍在2天內,且還有下一頁的文章,則再抓取
                 // console.log(JSON.parse(body).paging.next);
                 if (JSON.parse(body).paging.next) {
                     _getPosts(JSON.parse(body).paging.next);
@@ -186,19 +215,18 @@ function _getPostsM(url) {
             NCNUPostsM = NCNUPostsM.sort(function (a, b) {
                 return a.hot < b.hot ? 1 : -1;
             });
-            // console.log(NCNUPostsM);
-        }
-        // console.log(NCNUPostsM[NCNUPostsM.length - 1]);
-        var currTime = Date.parse(new Date().toDateString());
-        var lastTime = Date.parse(NCNUPostsM[NCNUPostsM.length - 1].created_time);
-        var monthSec = 30 * 24 * 60 * 60 * 1000;
-        // console.log(lastTime);
-        // console.log(currTime);
-        if (lastTime >= (currTime - monthSec)) {
-            // 最後一筆仍在7天內,且還有下一頁的文章,則再抓取
-            // console.log(JSON.parse(body).paging.next);
-            if (JSON.parse(body).paging.next) {
-                _getPostsM(JSON.parse(body).paging.next);
+            // console.log(NCNUPostsM[NCNUPostsM.length - 1]);
+            var currTime = Date.parse(new Date().toDateString());
+            var lastTime = Date.parse(NCNUPostsM[NCNUPostsM.length - 1].created_time);
+            var monthSec = 30 * 24 * 60 * 60 * 1000;
+            // console.log(lastTime);
+            // console.log(currTime);
+            if (lastTime >= (currTime - monthSec)) {
+                // 最後一筆仍在7天內,且還有下一頁的文章,則再抓取
+                // console.log(JSON.parse(body).paging.next);
+                if (JSON.parse(body).paging.next) {
+                    _getPostsM(JSON.parse(body).paging.next);
+                }
             }
         }
     });
@@ -239,19 +267,18 @@ function _getPostsW(url) {
             NCNUPostsW = NCNUPostsW.sort(function (a, b) {
                 return a.hot < b.hot ? 1 : -1;
             });
-            // console.log(NCNUPostsW);
-        }
-        // console.log(NCNUPosts[NCNUPosts.length - 1]);
-        var currTime = Date.parse(new Date().toDateString());
-        var lastTime = Date.parse(NCNUPostsW[NCNUPostsW.length - 1].created_time);
-        var weekSec = 7 * 24 * 60 * 60 * 1000;
-        // console.log(lastTime);
-        // console.log(currTime);
-        if (lastTime >= (currTime - weekSec)) {
-            // 最後一筆仍在7天內,且還有下一頁的文章,則再抓取
-            // console.log(JSON.parse(body).paging.next);
-            if (JSON.parse(body).paging.next) {
-                _getPostsW(JSON.parse(body).paging.next);
+            // console.log(NCNUPostsW[NCNUPostsW.length - 1]);
+            var currTime = Date.parse(new Date().toDateString());
+            var lastTime = Date.parse(NCNUPostsW[NCNUPostsW.length - 1].created_time);
+            var weekSec = 7 * 24 * 60 * 60 * 1000;
+            // console.log(lastTime);
+            // console.log(currTime);
+            if (lastTime >= (currTime - weekSec)) {
+                // 最後一筆仍在7天內,且還有下一頁的文章,則再抓取
+                // console.log(JSON.parse(body).paging.next);
+                if (JSON.parse(body).paging.next) {
+                    _getPostsW(JSON.parse(body).paging.next);
+                }
             }
         }
     });
@@ -273,6 +300,10 @@ function reflashToken() {
             var finalKey = tmpp[0].substr(5, 230).split("\\");
             myToken = finalKey[0];
             console.log("Reflash!");
+            // 抓取前先清空
+            NCNUPosts = [];
+            NCNUPostsW = [];
+            NCNUPostsM = [];
             _getPosts();
             _getPostsW();
             _getPostsM();
