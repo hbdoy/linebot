@@ -210,7 +210,9 @@ function _getPosts(url) {
                 return a.hot < b.hot ? 1 : -1;
             });
             // console.log(NCNUPosts[NCNUPosts.length - 1]);
-            var currTime = Date.parse(new Date().toDateString());
+            // var currTime = Date.parse(new Date().toDateString());
+            // 當日時間改以po文時間為準,而不是系統時間
+            var currTime = Date.parse(NCNUPosts[0].created_time);
             var lastTime = Date.parse(NCNUPosts[NCNUPosts.length - 1].created_time);
             var daySec = 2 * 24 * 60 * 60 * 1000;
             // console.log(lastTime);
@@ -262,7 +264,8 @@ function _getPostsM(url) {
                 return a.hot < b.hot ? 1 : -1;
             });
             // console.log(NCNUPostsM[NCNUPostsM.length - 1]);
-            var currTime = Date.parse(new Date().toDateString());
+            // var currTime = Date.parse(new Date().toDateString());
+            var currTime = Date.parse(NCNUPostsM[0].created_time);
             var lastTime = Date.parse(NCNUPostsM[NCNUPostsM.length - 1].created_time);
             var monthSec = 30 * 24 * 60 * 60 * 1000;
             // console.log(lastTime);
@@ -314,7 +317,8 @@ function _getPostsW(url) {
                 return a.hot < b.hot ? 1 : -1;
             });
             // console.log(NCNUPostsW[NCNUPostsW.length - 1]);
-            var currTime = Date.parse(new Date().toDateString());
+            // var currTime = Date.parse(new Date().toDateString());
+            var currTime = Date.parse(NCNUPostsW[0].created_time);
             var lastTime = Date.parse(NCNUPostsW[NCNUPostsW.length - 1].created_time);
             var weekSec = 7 * 24 * 60 * 60 * 1000;
             // console.log(lastTime);
