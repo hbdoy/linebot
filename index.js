@@ -74,8 +74,8 @@ function _botInit() {
                 counter = 0;
                 if (NCNUPosts.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
-                } else if (NCNUPosts.length >= 5) {
-                    for (let i = 0; i < 5; i++) {
+                } else if (NCNUPosts.length >= 8) {
+                    for (let i = 0; i < 8; i++) {
                         counter += NCNUPosts[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPosts[i].url;
                         if(counter > 2500){
                             break;
@@ -96,10 +96,10 @@ function _botInit() {
                 counter = 0;
                 if (NCNUPostsW.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
-                } else if (NCNUPostsW.length >= 5) {
-                    for (let i = 0; i < 5; i++) {
+                } else if (NCNUPostsW.length >= 8) {
+                    for (let i = 0; i < 8; i++) {
                         counter += NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url;
-                        if (counter > 2500) {
+                        if (counter.length > 2500) {
                             break;
                         }
                         replyMsg.push(NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url);
@@ -107,7 +107,7 @@ function _botInit() {
                 } else {
                     for (let i = 0; i < NCNUPostsW.length; i++) {
                         counter += NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url;
-                        if (counter > 2500) {
+                        if (counter.length > 2500) {
                             break;
                         }
                         replyMsg.push(NCNUPostsW[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsW[i].url);
@@ -118,10 +118,10 @@ function _botInit() {
                 counter = 0;
                 if (NCNUPostsM.length <= 0) {
                     replyMsg = "現在沒有文章，請稍後再試...";
-                } else if (NCNUPostsM.length >= 5) {
-                    for (let i = 0; i < 5; i++) {
+                } else if (NCNUPostsM.length >= 8) {
+                    for (let i = 0; i < 8; i++) {
                         counter += NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url;
-                        if (counter > 2500) {
+                        if (counter.length > 2500) {
                             break;
                         }
                         replyMsg.push(NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url);
@@ -129,7 +129,7 @@ function _botInit() {
                 } else {
                     for (let i = 0; i < NCNUPostsM.length; i++) {
                         counter += NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url;
-                        if (counter > 2500) {
+                        if (counter.length > 2500) {
                             break;
                         }
                         replyMsg.push(NCNUPostsM[i].message + "\nfb.com/NCNUSecrets2.0/posts/" + NCNUPostsM[i].url);
