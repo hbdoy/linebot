@@ -70,6 +70,7 @@ function _botInit() {
                     replyMsg = "李叡";
                 }
             } else if (msg == "抓") {
+                console.log(NCNUPosts.length);
                 replyMsg = [];
                 counter = 0;
                 if (NCNUPosts.length <= 0) {
