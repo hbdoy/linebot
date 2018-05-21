@@ -72,7 +72,7 @@ function _botInit() {
             var action = '';
             if (msg == "功能") {
                 action = msg;
-                replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n滾: 嗚嗚...";
+                replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n滾: 嗚嗚...,\n許願: 想要的功能目前還沒有嗎?";
             } else if (msg == "說明") {
                 action = msg;
                 replyMsg = "沒有時間看靠北版?\n但又想知道最近大家再靠北什麼嗎?\n\n歡迎使用本機器人\n幫您統整近期/一週/一個月內的熱門文章\n(熱門文章: 透過演算法評量按讚、留言、分享數)\n\n用法: 直接輸入想使用的指令即可，ex: 「抓」\n\n這是閒暇之餘的作品\n部屬在免費空間\n沒有反應可以再輸入一次或是稍後再試\n當然也歡迎小額donate\n將會用在伺服器升級(應該啦)";
@@ -82,9 +82,15 @@ function _botInit() {
                 event.source.profile().then(function (profile) {
                     event.reply('Hello ' + profile.displayName);
                 });
+            } else if (msg == "許願") {
+                action = msg;
+                replyMsg = "想要的功能上面沒有嗎?\n歡迎使用「許願=XXX」來讓作者知道~\nex: 好想要一個作業交易平台，那就輸入:\n許願=我想要一個作業交易平台\n有朝一日會有猴子完成的^_^";
+            } else if (msg.split("許願=").length == 2) {
+                action = "提交許願";
+                replyMsg = "感謝你讓我知道你掉的願望，有朝一日讓我替你實現 <3";
             } else if (msg == "聯絡") {
                 action = msg;
-                replyMsg = "開放許願功能，另外有任何問題都歡迎與我聯繫\ncowpei@protonmail.com";
+                replyMsg = "有任何問題或想法都歡迎與我聯繫\ncowpei@protonmail.com";
             } else if (msg == "誰最帥") {
                 action = msg;
                 replyMsg = "李叡";
@@ -194,8 +200,16 @@ function _botInit() {
             }
             event.source.profile().then(function (profile) {
                 pushUserData(profile);
-                if(action != ''){
-                    pushActionLog({userId: profile.userId, action: action});
+                if (action == "提交許願"){
+                    pushWishList({
+                        userId: profile.userId,
+                        content: msg.split("許願=")[1]
+                    });
+                }else if (action != '') {
+                    pushActionLog({
+                        userId: profile.userId,
+                        action: action
+                    });
                 }
                 if (event.source.groupId) {
                     pushGroup(event.source.groupId);
@@ -212,7 +226,10 @@ function _botInit() {
     bot.on('follow', function (event) {
         event.source.profile().then(function (profile) {
             pushUserData(profile);
-            pushActionLog({userId: profile.userId, action: "follow"});
+            pushActionLog({
+                userId: profile.userId,
+                action: "follow"
+            });
             console.log(profile);
         });
     });
@@ -428,7 +445,7 @@ function reflashToken() {
 //     });
 // }
 
-function pushUserData(tmp){
+function pushUserData(tmp) {
     var noPush = false;
     db.ref('/user').once('value', function (snapshot) {
         var data = snapshot.val();
@@ -436,7 +453,7 @@ function pushUserData(tmp){
             if (data[item].userId == tmp.userId) {
                 // 如果資料更改需要更新
                 var needUpdate = data[item].displayName != tmp.displayName || data[item].pictureUrl != tmp.pictureUrl || data[item].statusMessage != tmp.statusMessage;
-                if (needUpdate){
+                if (needUpdate) {
                     db.ref("/user").child(item).set(tmp);
                 }
                 noPush = true;
@@ -450,10 +467,22 @@ function pushUserData(tmp){
 }
 
 function pushActionLog(tmp) {
-    db.ref("/log").push({userId: tmp.userId, action: tmp.action, time: DateTimezone(8)});
+    db.ref("/log").push({
+        userId: tmp.userId,
+        action: tmp.action,
+        time: DateTimezone(8)
+    });
 }
 
-function pushGroup(tmp){
+function pushWishList(tmp) {
+    db.ref("/wish").push({
+        userId: tmp.userId,
+        content: tmp.content,
+        time: DateTimezone(8)
+    });
+}
+
+function pushGroup(tmp) {
     var noPush = false;
     db.ref('/group').once('value', function (snapshot) {
         var data = snapshot.val();
@@ -463,7 +492,9 @@ function pushGroup(tmp){
             }
         }
         if (!noPush) {
-            db.ref("/group").push({groupId: tmp});
+            db.ref("/group").push({
+                groupId: tmp
+            });
         }
     });
 }
@@ -478,7 +509,9 @@ function pushRoom(tmp) {
             }
         }
         if (!noPush) {
-            db.ref("/room").push({roomId: tmp});
+            db.ref("/room").push({
+                roomId: tmp
+            });
         }
     });
 }
