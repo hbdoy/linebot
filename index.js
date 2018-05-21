@@ -205,7 +205,8 @@ function _botInit() {
                         userId: profile.userId,
                         content: msg.split("許願=")[1]
                     });
-                } else if (action != '') {
+                }
+                if (action != '') {
                     pushActionLog({
                         userId: profile.userId,
                         action: action
