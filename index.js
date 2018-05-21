@@ -62,6 +62,7 @@ function _botInit() {
                 waitForAjax = true;
                 event.source.profile().then(function (profile) {
                     event.reply('Hello ' + profile.displayName);
+                    console.log(profile);
                 });
             } else if (msg == "聯絡") {
                 replyMsg = "開放許願功能，另外有任何問題都歡迎與我聯繫\ncowpei@protonmail.com";
