@@ -85,9 +85,6 @@ function _botInit() {
             } else if (msg == "許願") {
                 action = msg;
                 replyMsg = "想要的功能上面沒有嗎?\n歡迎使用「許願=XXX」來讓作者知道~\nex: 好想要一個作業交易平台，那就輸入:\n「許願=我想要一個作業交易平台」\n有朝一日會有猴子完成的^_^";
-            } else if (msg.split("許願=").length == 2) {
-                action = "提交許願";
-                replyMsg = "感謝你讓我知道你掉的願望，有朝一日讓我替你實現 <3";
             } else if (msg == "聯絡") {
                 action = msg;
                 replyMsg = "有任何問題或想法都歡迎與我聯繫\ncowpei@protonmail.com";
@@ -190,6 +187,9 @@ function _botInit() {
                     event.reply(replyMsg);
                     console.log(replyMsg);
                 }
+            } else if (msg.split("許願=").length == 2) {
+                action = "提交許願";
+                replyMsg = "感謝你讓我知道你掉的願望，有朝一日讓我替你實現 <3";
             }
             if (!waitForAjax) {
                 event.reply(replyMsg).then(function (data) {
@@ -200,12 +200,12 @@ function _botInit() {
             }
             event.source.profile().then(function (profile) {
                 pushUserData(profile);
-                if (action == "提交許願"){
+                if (action == "提交許願") {
                     pushWishList({
                         userId: profile.userId,
                         content: msg.split("許願=")[1]
                     });
-                }else if (action != '') {
+                } else if (action != '') {
                     pushActionLog({
                         userId: profile.userId,
                         action: action
