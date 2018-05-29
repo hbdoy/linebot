@@ -476,6 +476,10 @@ function pushUserData(tmp) {
                 // 在群組裡面沒有辦法抓到statusMsg，故不判斷
                 if(inGroup){
                     needUpdate = (data.displayName != tmp.displayName) || (data.pictureUrl != tmp.pictureUrl);
+                    // 如果資料庫有個性簽名，則加入tmp中
+                    if(data.statusMessage){
+                        tmp.statusMessage = data.statusMessage;
+                    }
                 }else{
                     needUpdate = (data.displayName != tmp.displayName) || (data.pictureUrl != tmp.pictureUrl) || (data.statusMessage != tmp.statusMessage);
                 }
