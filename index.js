@@ -462,17 +462,24 @@ function reflashToken() {
 }
 
 function pushUserData(tmp) {
+    // 大雷: 使用者在group中，資料抓不到statusMsg
+    var inGroup = false;
     var needUpdate = false;
     if(tmp.groupId){
         delete tmp.groupId;
+        inGroup = true;
     }
     db.ref('/user/' + tmp.userId).once('value', function (snapshot) {
         var data = snapshot.val();
-        console.log(tmp);
         if (data) {
             if (data.userId == tmp.userId) {
+                // 在群組裡面沒有辦法抓到statusMsg，故不判斷
+                if(inGroup){
+                    needUpdate = (data.displayName != tmp.displayName) || (data.pictureUrl != tmp.pictureUrl);
+                }else{
+                    needUpdate = (data.displayName != tmp.displayName) || (data.pictureUrl != tmp.pictureUrl) || (data.statusMessage != tmp.statusMessage);
+                }
                 // 如果資料更改需要更新
-                var needUpdate = (data.displayName != tmp.displayName) || (data.pictureUrl != tmp.pictureUrl) || (data.statusMessage != tmp.statusMessage);
                 if (needUpdate) {
                     tmp.lastTime = DateTimezone(8);
                     db.ref("/user/" + tmp.userId).set(tmp);
