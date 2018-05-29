@@ -516,6 +516,7 @@ function getBeautyImg() {
         // 順便從網站抓取最新的資料
         getNewBeautyImg();
     });
+    console.log("updateImg");
     // 一小時更新一次
     timerForImg = setInterval(getBeautyImg, 3600000);
 }
