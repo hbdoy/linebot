@@ -475,7 +475,7 @@ function pushGroup(tmp) {
         if(data){
             console.log("Already exist");
         }else{
-            db.ref("/group/" + tmp).push({
+            db.ref("/group/" + tmp).set({
                 groupId: tmp
             });
         }
@@ -488,7 +488,7 @@ function pushRoom(tmp) {
         if (data) {
             console.log("Already exist");
         } else {
-            db.ref("/room/" + tmp).push({
+            db.ref("/room/" + tmp).set({
                 roomId: tmp
             });
         }
