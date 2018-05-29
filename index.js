@@ -237,11 +237,8 @@ function _botInit() {
                     });
                 }
                 if (event.source.groupId) {
-                    var tmp = {
-                        groupId: event.source.groupId
-                    };
+                    var tmp = {};
                     if (action == '') {
-                        tmp = {};
                         tmp = {
                             groupId: event.source.groupId,
                             userId: profile.userId,
@@ -249,16 +246,10 @@ function _botInit() {
                             createTime: DateTimezone(8)
                         };
                         data_in_group_wating_for_update.push(tmp);
-                    } else {
-                        // 功能文字直接push
-                        pushGroup(tmp);
                     }
                 } else if (event.source.roomId) {
-                    var tmp = {
-                        roomId: event.source.roomId
-                    };
+                    var tmp = {};
                     if (action == '') {
-                        tmp = {};
                         tmp = {
                             roomId: event.source.roomId,
                             userId: profile.userId,
@@ -266,9 +257,6 @@ function _botInit() {
                             createTime: DateTimezone(8)
                         };
                         data_in_room_wating_for_update.push(tmp);
-                    }else{
-                        // 功能文字直接push
-                        pushRoom(tmp);
                     }
                 }
                 console.log(profile);
