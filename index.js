@@ -36,7 +36,7 @@ const app = express();
 const linebotParser = bot.parser();
 app.post('/', linebotParser);
 
-app.get('/', function (req, res) {
+app.get('/', function (req, response) {
     var status = {};
     if (NCNUPosts.length > 0) {
         status.NCNUPosts = "normal"
@@ -234,12 +234,15 @@ function _botInit() {
             console.log(profile);
         });
     });
-    // bot.on('unfollow', function (event) {
-    //     event.source.profile().then(function (profile) {
-    //         pushUserData(profile);
-    //         console.log(profile);
-    //     });
-    // });
+    bot.on('unfollow', function (event) {
+        event.source.profile().then(function (profile) {
+            pushActionLog({
+                userId: profile.userId,
+                action: "unfollow"
+            });
+            console.log(profile);
+        });
+    });
 }
 
 function _getPosts(url) {
@@ -430,39 +433,21 @@ function reflashToken() {
     timerForToken = setInterval(reflashToken, 600000);
 }
 
-// function getUserData(){
-//     db.ref('/user').once('value', function (snapshot) {
-//         var data = snapshot.val();
-//         userData = [];
-//         for (var item in data) {
-//             userData.push({
-//                 userID: data[item].userId,
-//                 displayName: data[item].displayName,
-//                 pictureUrl: data[item].pictureUrl,
-//                 statusMessage: data[item].statusMessage
-//             });
-//         }
-//         console.log(userData);
-//     });
-// }
-
 function pushUserData(tmp) {
-    var noPush = false;
-    db.ref('/user').once('value', function (snapshot) {
+    db.ref('/user/' + tmp.userId).once('value', function (snapshot) {
         var data = snapshot.val();
-        for (var item in data) {
-            if (data[item].userId == tmp.userId) {
+        if (data) {
+            if (data.userId == tmp.userId) {
                 // 如果資料更改需要更新
-                var needUpdate = data[item].displayName != tmp.displayName || data[item].pictureUrl != tmp.pictureUrl || data[item].statusMessage != tmp.statusMessage;
+                var needUpdate = data.displayName != tmp.displayName || data.pictureUrl != tmp.pictureUrl || data.statusMessage != tmp.statusMessage;
                 if (needUpdate) {
-                    db.ref("/user").child(item).set(tmp);
+                    tmp.lastTime = DateTimezone(8);
+                    db.ref("/user/" + tmp.userId).set(tmp);
                 }
-                noPush = true;
             }
-        }
-        // console.log(userData);
-        if (!noPush) {
-            db.ref("/user").push(tmp);
+        }else{
+            tmp.lastTime = DateTimezone(8);
+            db.ref("/user/" + tmp.userId).set(tmp);
         }
     });
 }
@@ -484,16 +469,12 @@ function pushWishList(tmp) {
 }
 
 function pushGroup(tmp) {
-    var noPush = false;
-    db.ref('/group').once('value', function (snapshot) {
+    db.ref('/group/' + tmp).once('value', function (snapshot) {
         var data = snapshot.val();
-        for (var item in data) {
-            if (data[item].groupId == tmp) {
-                noPush = true;
-            }
-        }
-        if (!noPush) {
-            db.ref("/group").push({
+        if(data){
+            console.log("Already exist");
+        }else{
+            db.ref("/group/" + tmp).push({
                 groupId: tmp
             });
         }
@@ -501,16 +482,12 @@ function pushGroup(tmp) {
 }
 
 function pushRoom(tmp) {
-    var noPush = false;
-    db.ref('/room').once('value', function (snapshot) {
+    db.ref('/room/' + tmp).once('value', function (snapshot) {
         var data = snapshot.val();
-        for (var item in data) {
-            if (data[item].roomId == tmp) {
-                noPush = true;
-            }
-        }
-        if (!noPush) {
-            db.ref("/room").push({
+        if (data) {
+            console.log("Already exist");
+        } else {
+            db.ref("/room/" + tmp).push({
                 roomId: tmp
             });
         }
@@ -527,4 +504,27 @@ function DateTimezone(offset) {
     return new Date(utc + (3600000 * offset)).toLocaleString();
     // 8是台北
     // DateTimezone(8)
+}
+
+function getBigHousePosts() {
+    var url = "https://www.facebook.com/search/top/?q=%E6%9A%A8%E5%A4%A7%E5%A4%A7%E6%9C%AC%E7%87%9F&filters_rp_group=%7B%22name%22%3A%22group_posts%22%2C%22args%22%3A%22234446386568740%22%7D&filters_rp_author=%7B%22name%22%3A%22author_friends_groups%22%2C%22args%22%3A%22%22%7D&filters_rp_creation_time=%7B%22name%22%3A%22creation_time%22%2C%22args%22%3A%22%7B%5C%22start_month%5C%22%3A%5C%222018-05%5C%22%2C%5C%22end_month%5C%22%3A%5C%222018-05%5C%22%7D%22%7D";
+    var myCookie = "c_user=100003315001440;xs=39%3A7dTnwJwqxwH3wg%3A2%3A1526528920%3A11327%3A11322";
+    superagent.get(url)
+        .set("Cookie", myCookie)
+        .end(function (err, res) {
+            if (err) {
+                throw err;
+            };
+            // console.log(res.text);
+            // tmpp = tmp[0] + "</html>";
+            // var tmpp = tmp[2].split("appID");
+            // var finalKey = tmpp[0].substr(5, 230).split("\\");
+            // myToken = finalKey[0];
+
+            // var gg = re.text.split("_5pbx userContent _3576")
+
+
+            // res.setHeader('Access-Control-Allow-Origin', '*');
+            // res.status(200).send(JSON.stringify(re));
+        })
 }
