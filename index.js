@@ -38,7 +38,7 @@ var data_in_group_wating_for_update = [],
 
 reflashToken();
 getBeautyImg();
-uploadText();
+// uploadText();
 _botInit();
 
 const app = express();
