@@ -462,9 +462,13 @@ function reflashToken() {
 }
 
 function pushUserData(tmp) {
+    var needUpdate = false;
+    if(tmp.groupId){
+        delete tmp.groupId;
+    }
     db.ref('/user/' + tmp.userId).once('value', function (snapshot) {
         var data = snapshot.val();
-        console.log(data);
+        console.log(tmp);
         if (data) {
             if (data.userId == tmp.userId) {
                 // 如果資料更改需要更新
