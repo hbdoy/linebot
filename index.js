@@ -223,7 +223,10 @@ function _botInit() {
     });
     bot.on('join', function (event) {
         event.reply("感謝您將本帳號加入群組，也歡迎將本帳號設為好友！\n\n每天都有好多的靠北文\n全部看完很花時間\n但又想知道最近哪些靠北文比較火紅嗎？\n\n歡迎使用本懶人靠北包\n不知道要怎麼操作?\n試試看輸入「功能」\n\nps.\n沒有反應可以再輸入一次或是稍後再試>///<");
-        console.log(event);
+        if (event.source.groupId){
+            pushGroup(event.source.groupId);
+        }
+        // console.log(event);
     });
     bot.on('follow', function (event) {
         event.source.profile().then(function (profile) {
@@ -232,7 +235,7 @@ function _botInit() {
                 userId: profile.userId,
                 action: "follow"
             });
-            console.log(profile);
+            // console.log(profile);
         });
     });
     bot.on('unfollow', function (event) {
@@ -240,7 +243,7 @@ function _botInit() {
             userId: event.source.userId,
             action: "unfollow"
         });
-        console.log(event);
+        // console.log(event);
     });
 }
 
@@ -474,7 +477,8 @@ function pushGroup(tmp) {
             console.log("Already exist");
         } else {
             db.ref("/group/" + tmp).set({
-                groupId: tmp
+                groupId: tmp,
+                joinTime: DateTimezone(8)
             });
         }
     });
@@ -487,7 +491,8 @@ function pushRoom(tmp) {
             console.log("Already exist");
         } else {
             db.ref("/room/" + tmp).set({
-                roomId: tmp
+                roomId: tmp,
+                joinTime: DateTimezone(8)
             });
         }
     });
