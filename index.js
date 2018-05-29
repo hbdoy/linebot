@@ -468,7 +468,7 @@ function pushUserData(tmp) {
     var needUpdate = false;
     // 讓群組個人資料和個人資料照片網址一致
     if (tmp.pictureUrl){
-        tmp.pictureUrl = tmp.pictureUrl.replace(/dl./, "");
+        tmp.pictureUrl = tmp.pictureUrl.replace(/dl./, "").replace(/https/, "http");
     }
     db.ref('/user/' + tmp.userId).once('value', function (snapshot) {
         var data = snapshot.val();
