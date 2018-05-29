@@ -465,30 +465,32 @@ function pushUserData(tmp) {
     // 大雷: 使用者在group中，資料抓不到statusMsg
     var inGroup = false;
     var needUpdate = false;
-    if(tmp.groupId){
-        delete tmp.groupId;
-        inGroup = true;
-    }
     db.ref('/user/' + tmp.userId).once('value', function (snapshot) {
         var data = snapshot.val();
+        if (tmp.groupId) {
+            delete tmp.groupId;
+            inGroup = true;
+        }
         if (data) {
-            if (data.userId == tmp.userId) {
-                // 在群組裡面沒有辦法抓到statusMsg，故不判斷
-                if(inGroup){
-                    needUpdate = (data.displayName != tmp.displayName) || (data.pictureUrl != tmp.pictureUrl);
-                    // 如果資料庫有個性簽名，則加入tmp中
-                    if(data.statusMessage){
-                        tmp.statusMessage = data.statusMessage;
-                    }
+            // 在群組裡面沒有辦法抓到statusMsg，故不判斷
+            if (inGroup) {
+                needUpdate = (data.displayName != tmp.displayName) || (data.pictureUrl != tmp.pictureUrl);
+                // 如果資料庫有個性簽名，則加入tmp中
+                if (data.statusMessage) {
+                    tmp.statusMessage = data.statusMessage;
+                }
+            } else {
+                if(!data.statusMessage){
+                    needUpdate = true;
                 }else{
                     needUpdate = (data.displayName != tmp.displayName) || (data.pictureUrl != tmp.pictureUrl) || (data.statusMessage != tmp.statusMessage);
                 }
-                // 如果資料更改需要更新
-                if (needUpdate) {
-                    tmp.lastTime = DateTimezone(8);
-                    db.ref("/user/" + tmp.userId).set(tmp);
-                    console.log("update");
-                }
+            }
+            // 如果資料更改需要更新
+            if (needUpdate) {
+                tmp.lastTime = DateTimezone(8);
+                db.ref("/user/" + tmp.userId).set(tmp);
+                console.log("update");
             }
         } else {
             tmp.lastTime = DateTimezone(8);
