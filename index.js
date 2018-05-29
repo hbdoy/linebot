@@ -25,7 +25,7 @@ var bot = linebot({
     channelAccessToken: process.env.channelAccessToken
 });
 
-var timerForNCNU, timerForToken, timerForImg;
+var timerForToken, timerForImg, timerForUpload;
 var myToken = '';
 var NCNUPosts = [],
     NCNUPostsW = [],
@@ -33,8 +33,12 @@ var NCNUPosts = [],
     beautyImg_new = [],
     beautyImg_DB = [],
     beautyImg_check = {};
+var data_in_group_wating_for_update = [],
+    data_in_room_wating_for_update = [];
+
 reflashToken();
 getBeautyImg();
+uploadText();
 _botInit();
 
 const app = express();
@@ -83,9 +87,9 @@ function _botInit() {
                 replyMsg = "沒有時間看靠北版?\n但又想知道最近大家再靠北什麼嗎?\n\n歡迎使用本機器人\n幫您統整近期/一週/一個月內的熱門文章\n(熱門文章: 透過演算法評量按讚、留言、分享數)\n\n用法: 直接輸入想使用的指令即可，ex: 「抓」\n\n這是閒暇之餘的作品\n部屬在免費空間\n沒有反應可以再輸入一次或是稍後再試\n當然也歡迎小額donate\n將會用在伺服器升級(應該啦)\n\n(圖片和文章來源皆為網路，並非用於營利用途，如有侵權請立即告知!)";
             } else if (msg == "抽") {
                 action = msg;
-                if (beautyImg_DB.length == 0){
+                if (beautyImg_DB.length == 0) {
                     replyMsg = "現在沒有圖片，請稍後再試>///<";
-                }else{
+                } else {
                     waitForAjax = true;
                     var num = Math.floor(Math.random() * beautyImg_DB.length);
                     event.reply({
@@ -244,8 +248,11 @@ function _botInit() {
                             text: msg,
                             createTime: DateTimezone(8)
                         };
+                        data_in_group_wating_for_update.push(tmp);
+                    } else {
+                        // 功能文字直接push
+                        pushGroup(tmp);
                     }
-                    pushGroup(tmp);
                 } else if (event.source.roomId) {
                     var tmp = {
                         roomId: event.source.roomId
@@ -258,8 +265,11 @@ function _botInit() {
                             text: msg,
                             createTime: DateTimezone(8)
                         };
+                        data_in_room_wating_for_update.push(tmp);
+                    }else{
+                        // 功能文字直接push
+                        pushRoom(tmp);
                     }
-                    pushRoom(tmp);
                 }
                 console.log(profile);
             });
@@ -545,8 +555,8 @@ function reflashToken() {
             _getPostsW();
             _getPostsM();
         })
-    // 每10分鐘抓取一次新資料
-    timerForToken = setInterval(reflashToken, 600000);
+    // 每15分鐘抓取一次新資料
+    timerForToken = setInterval(reflashToken, 900000);
 }
 
 function pushUserData(tmp) {
@@ -615,14 +625,21 @@ function pushGroup(tmp) {
                 joinTime: DateTimezone(8)
             });
         }
-        if (tmp.text) {
-            db.ref("/group/" + tmp.groupId + "/content/" + tmp.createTime).set({
-                text: tmp.text,
-                userId: tmp.userId,
-                createTime: tmp.createTime
-            });
-        }
     });
+}
+
+function pushContentInGroup(){
+    for(var key in data_in_group_wating_for_update){
+        if (data_in_group_wating_for_update[key].text) {
+            db.ref("/group/" + data_in_group_wating_for_update.groupId + "/content/" + data_in_group_wating_for_update.createTime).set({
+                text: data_in_group_wating_for_update.text,
+                userId: data_in_group_wating_for_update.userId,
+                createTime: data_in_group_wating_for_update.createTime
+            });
+            // 上傳完就清空
+            data_in_group_wating_for_update.splice(key, 1);
+        }
+    }
 }
 
 function pushRoom(tmp) {
@@ -636,14 +653,30 @@ function pushRoom(tmp) {
                 joinTime: DateTimezone(8)
             });
         }
-        if (tmp.text) {
-            db.ref("/room/" + tmp.roomId + "/content/" + tmp.createTime).set({
-                text: tmp.text,
-                userId: tmp.userId,
-                createTime: tmp.createTime
-            });
-        }
     });
+}
+
+function pushContentInRoom() {
+    for (var key in data_in_Room_wating_for_update) {
+        if (data_in_Room_wating_for_update[key].text) {
+            db.ref("/Room/" + data_in_Room_wating_for_update.RoomId + "/content/" + data_in_Room_wating_for_update.createTime).set({
+                text: data_in_Room_wating_for_update.text,
+                userId: data_in_Room_wating_for_update.userId,
+                createTime: data_in_Room_wating_for_update.createTime
+            });
+            // 上傳完就清空
+            data_in_Room_wating_for_update.splice(key, 1);
+        }
+    }
+}
+
+function uploadText(){
+    clearTimeout(timerForUpload);
+    pushContentInGroup();
+    pushContentInRoom();
+    // 每10分鐘上傳一次資料
+    timerForUpload = setInterval(uploadText, 60000);
+    // timerForUpload = setInterval(uploadText, 600000);
 }
 
 // 新增當地時區的時間物件
