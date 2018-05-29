@@ -3,6 +3,7 @@ var express = require('express');
 var request = require('request');
 var superagent = require('superagent');
 var firebase = require("firebase");
+var cheerio = require("cheerio");
 
 // Initialize Firebase
 var config = {
@@ -24,12 +25,16 @@ var bot = linebot({
     channelAccessToken: process.env.channelAccessToken
 });
 
-var timerForNCNU, timerForToken;
+var timerForNCNU, timerForToken, timerForImg;
 var myToken = '';
 var NCNUPosts = [],
     NCNUPostsW = [],
-    NCNUPostsM = [];
+    NCNUPostsM = [],
+    beautyImg_new = [],
+    beautyImg_DB = [],
+    beautyImg_check = {};
 reflashToken();
+getBeautyImg();
 _botInit();
 
 const app = express();
@@ -72,10 +77,23 @@ function _botInit() {
             var action = '';
             if (msg == "功能") {
                 action = msg;
-                replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n滾: 嗚嗚...,\n許願: 想要的功能目前還沒有嗎?";
+                replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\n抽: 抽美美的照片(圖片來源為網路，若是侵權請立即告知),\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n滾: 嗚嗚...,\n許願: 想要的功能目前還沒有嗎?";
             } else if (msg == "說明") {
                 action = msg;
-                replyMsg = "沒有時間看靠北版?\n但又想知道最近大家再靠北什麼嗎?\n\n歡迎使用本機器人\n幫您統整近期/一週/一個月內的熱門文章\n(熱門文章: 透過演算法評量按讚、留言、分享數)\n\n用法: 直接輸入想使用的指令即可，ex: 「抓」\n\n這是閒暇之餘的作品\n部屬在免費空間\n沒有反應可以再輸入一次或是稍後再試\n當然也歡迎小額donate\n將會用在伺服器升級(應該啦)";
+                replyMsg = "沒有時間看靠北版?\n但又想知道最近大家再靠北什麼嗎?\n\n歡迎使用本機器人\n幫您統整近期/一週/一個月內的熱門文章\n(熱門文章: 透過演算法評量按讚、留言、分享數)\n\n用法: 直接輸入想使用的指令即可，ex: 「抓」\n\n這是閒暇之餘的作品\n部屬在免費空間\n沒有反應可以再輸入一次或是稍後再試\n當然也歡迎小額donate\n將會用在伺服器升級(應該啦)\n\n(圖片和文章來源皆為網路，並非用於營利用途，如有侵權請立即告知!)";
+            } else if (msg == "抽") {
+                action = msg;
+                if (beautyImg_DB.length == 0){
+                    replyMsg = "現在沒有圖片，請稍後再試>///<";
+                }else{
+                    waitForAjax = true;
+                    var num = Math.floor(Math.random() * beautyImg_DB.length);
+                    event.reply({
+                        type: 'image',
+                        originalContentUrl: beautyImg_DB[num].url,
+                        previewImageUrl: beautyImg_DB[num].url
+                    });
+                }
             } else if (msg == "我是誰") {
                 action = msg;
                 waitForAjax = true;
@@ -200,12 +218,14 @@ function _botInit() {
             }
             event.source.profile().then(function (profile) {
                 pushUserData(profile);
+                // 特別處理許願
                 if (action == "提交許願") {
                     pushWishList({
                         userId: profile.userId,
                         content: msg.split("許願=")[1]
                     });
                 }
+                // 其餘直接將行為名稱存入
                 if (action != '') {
                     pushActionLog({
                         userId: profile.userId,
@@ -431,6 +451,73 @@ function _getPostsW(url) {
             }
         }
     });
+}
+
+// 爬取最新圖片，並更新進DB
+function getNewBeautyImg() {
+    var url = "https://ptt-beauty-images.herokuapp.com/";
+    request({
+        url: url,
+        method: "GET"
+    }, function (error, response, body) {
+        if (error || !body) {
+            console.log("發生錯誤");
+            console.log(error);
+            return;
+        }
+        var $ = cheerio.load(body);
+        $(".img-thumbnail").each(function (i, e) {
+            var tmp = $(e).attr("href");
+            if ((tmp.indexOf(".jpg") != -1) || (tmp.indexOf(".png") != -1)) {
+                // 過濾掉網址可能是xxx.mp4.jpg的影片
+                if ((tmp.indexOf(".mp4") == -1) && (tmp.indexOf(".gif") == -1)) {
+                    var tmpp = tmp.replace("https://i.imgur.com/", "").split(".");
+                    var key = tmpp[0];
+                    if (!beautyImg_check.key) {
+                        beautyImg_new.push({
+                            url: tmp,
+                            key: key
+                        });
+                    }
+                }
+            }
+            // console.log($(e).attr("href"));
+        });
+        for (var value of beautyImg_new) {
+            db.ref("/beauty/" + value.key).set({
+                url: value.url
+            });
+        }
+        // console.log(beautyImg.length);
+    });
+}
+
+// from firebase
+function getBeautyImg() {
+    // 每個小時從DB撈最新的資料
+    clearTimeout(timerForImg);
+    db.ref('/beauty').once('value', function (snapshot) {
+        // 抓到新資料後先把舊資料清空
+        beautyImg_DB = [],
+            beautyImg_new = [],
+            beautyImg_check = {};
+        var data = snapshot.val();
+        if (data) {
+            for (var item in data) {
+                beautyImg_DB.push({
+                    url: data[item].url
+                });
+                // 方便更新時檢查是否存在
+                beautyImg_check[item] = {
+                    url: data[item].url
+                };
+            }
+        }
+        // 順便從網站抓取最新的資料
+        getNewBeautyImg();
+    });
+    // 一小時更新一次
+    timerForImg = setInterval(getBeautyImg, 3600000);
 }
 
 function reflashToken() {
