@@ -259,7 +259,7 @@ function _botInit() {
                         data_in_room_wating_for_update.push(tmp);
                     }
                 }
-                console.log(profile);
+                // console.log(profile);
             });
         }
     });
@@ -268,6 +268,10 @@ function _botInit() {
         if (event.source.groupId) {
             pushGroup({
                 groupId: event.source.groupId
+            });
+        }else if (event.source.roomId) {
+            pushRoom({
+                roomId: event.source.roomId
             });
         }
         // console.log(event);
@@ -577,7 +581,7 @@ function pushUserData(tmp) {
             if (needUpdate) {
                 tmp.lastTime = DateTimezone(8);
                 db.ref("/user/" + tmp.userId).set(tmp);
-                console.log("update");
+                console.log("updateUserData");
             }
         } else {
             tmp.lastTime = DateTimezone(8);
@@ -606,7 +610,7 @@ function pushGroup(tmp) {
     db.ref('/group/' + tmp.groupId).once('value', function (snapshot) {
         var data = snapshot.val();
         if (data) {
-            console.log("Already exist");
+            console.log("Group Already exist");
         } else {
             db.ref("/group/" + tmp.groupId).set({
                 groupId: tmp.groupId,
@@ -636,7 +640,7 @@ function pushRoom(tmp) {
     db.ref('/room/' + tmp.roomId).once('value', function (snapshot) {
         var data = snapshot.val();
         if (data) {
-            console.log("Already exist");
+            console.log("Room Already exist");
         } else {
             db.ref("/room/" + tmp.roomId).set({
                 roomId: tmp.roomId,
@@ -666,9 +670,8 @@ function uploadText(){
     pushContentInGroup();
     pushContentInRoom();
     // 每10分鐘上傳一次資料
-    timerForUpload = setInterval(uploadText, 60000);
-    // timerForUpload = setInterval(uploadText, 600000);
-    console.log("text upload");
+    timerForUpload = setInterval(uploadText, 600000);
+    console.log("textUpload");
 }
 
 // 新增當地時區的時間物件
