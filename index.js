@@ -629,17 +629,19 @@ function pushGroup(tmp) {
 }
 
 function pushContentInGroup(){
+    var lastKey = 0;
     for(var key in data_in_group_wating_for_update){
         if (data_in_group_wating_for_update[key].text) {
-            db.ref("/group/" + data_in_group_wating_for_update[key].groupId + "/content/" + data_in_group_wating_for_update[key].createTime).set({
+            db.ref("/group/" + data_in_group_wating_for_update[key].groupId + "/content").push({
                 text: data_in_group_wating_for_update[key].text,
                 userId: data_in_group_wating_for_update[key].userId,
                 createTime: data_in_group_wating_for_update[key].createTime
             });
-            // 上傳完就清空
-            data_in_group_wating_for_update.splice(key, 1);
+            lastKey = key;
         }
     }
+    // 上傳完就清空
+    data_in_group_wating_for_update.splice(0, lastKey + 1);
 }
 
 function pushRoom(tmp) {
@@ -657,17 +659,18 @@ function pushRoom(tmp) {
 }
 
 function pushContentInRoom() {
+    var lastKey = 0;
     for (var key in data_in_room_wating_for_update) {
         if (data_in_room_wating_for_update[key].text) {
-            db.ref("/Room/" + data_in_room_wating_for_update[key].roomId + "/content/" + data_in_room_wating_for_update[key].createTime).set({
+            db.ref("/room/" + data_in_room_wating_for_update[key].roomId + "/content").push({
                 text: data_in_room_wating_for_update[key].text,
                 userId: data_in_room_wating_for_update[key].userId,
                 createTime: data_in_room_wating_for_update[key].createTime
             });
-            // 上傳完就清空
-            data_in_room_wating_for_update.splice(key, 1);
         }
     }
+    // 上傳完就清空
+    data_in_room_wating_for_update.splice(0, lastKey + 1);
 }
 
 function uploadText(){
