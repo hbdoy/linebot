@@ -247,9 +247,11 @@ function _botInit() {
     });
     bot.on('join', function (event) {
         event.reply("感謝您將本帳號加入群組，也歡迎將本帳號設為好友！\n\n每天都有好多的靠北文\n全部看完很花時間\n但又想知道最近哪些靠北文比較火紅嗎？\n\n歡迎使用本懶人靠北包\n不知道要怎麼操作?\n試試看輸入「功能」\n\nps.\n沒有反應可以再輸入一次或是稍後再試>///<");
-        // if (event.source.groupId) {
-        //     pushGroup(event.source.groupId);
-        // }
+        if (event.source.groupId) {
+            pushGroup({
+                groupId: event.source.groupId
+            });
+        }
         // console.log(event);
     });
     bot.on('follow', function (event) {
