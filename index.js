@@ -467,7 +467,7 @@ function pushUserData(tmp) {
         if (data) {
             if (data.userId == tmp.userId) {
                 // 如果資料更改需要更新
-                var needUpdate = data.displayName != tmp.displayName || data.pictureUrl != tmp.pictureUrl || data.statusMessage != tmp.statusMessage;
+                var needUpdate = (data.displayName != tmp.displayName) || (data.pictureUrl != tmp.pictureUrl) || (data.statusMessage != tmp.statusMessage);
                 if (needUpdate) {
                     tmp.lastTime = DateTimezone(8);
                     db.ref("/user/" + tmp.userId).set(tmp);
