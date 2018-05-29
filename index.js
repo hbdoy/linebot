@@ -657,15 +657,15 @@ function pushRoom(tmp) {
 }
 
 function pushContentInRoom() {
-    for (var key in data_in_Room_wating_for_update) {
-        if (data_in_Room_wating_for_update[key].text) {
-            db.ref("/Room/" + data_in_Room_wating_for_update.RoomId + "/content/" + data_in_Room_wating_for_update.createTime).set({
-                text: data_in_Room_wating_for_update.text,
-                userId: data_in_Room_wating_for_update.userId,
-                createTime: data_in_Room_wating_for_update.createTime
+    for (var key in data_in_room_wating_for_update) {
+        if (data_in_room_wating_for_update[key].text) {
+            db.ref("/Room/" + data_in_room_wating_for_update.RoomId + "/content/" + data_in_room_wating_for_update.createTime).set({
+                text: data_in_room_wating_for_update.text,
+                userId: data_in_room_wating_for_update.userId,
+                createTime: data_in_room_wating_for_update.createTime
             });
             // 上傳完就清空
-            data_in_Room_wating_for_update.splice(key, 1);
+            data_in_room_wating_for_update.splice(key, 1);
         }
     }
 }
@@ -677,6 +677,7 @@ function uploadText(){
     // 每10分鐘上傳一次資料
     timerForUpload = setInterval(uploadText, 60000);
     // timerForUpload = setInterval(uploadText, 600000);
+    console.log("text upload");
 }
 
 // 新增當地時區的時間物件
