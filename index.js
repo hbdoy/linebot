@@ -464,6 +464,7 @@ function reflashToken() {
 function pushUserData(tmp) {
     db.ref('/user/' + tmp.userId).once('value', function (snapshot) {
         var data = snapshot.val();
+        console.log("data");
         if (data) {
             if (data.userId == tmp.userId) {
                 // 如果資料更改需要更新
@@ -471,6 +472,7 @@ function pushUserData(tmp) {
                 if (needUpdate) {
                     tmp.lastTime = DateTimezone(8);
                     db.ref("/user/" + tmp.userId).set(tmp);
+                    console.log("update");
                 }
             }
         } else {
