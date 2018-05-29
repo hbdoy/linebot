@@ -235,13 +235,10 @@ function _botInit() {
         });
     });
     bot.on('unfollow', function (event) {
-        // event.source.profile().then(function (profile) {
-        //     // pushActionLog({
-        //     //     userId: profile.userId,
-        //     //     action: "unfollow"
-        //     // });
-        //     // console.log(profile);
-        // });
+        pushActionLog({
+            userId: event.source.userId,
+            action: "unfollow"
+        });
         console.log(event);
     });
 }
@@ -446,7 +443,7 @@ function pushUserData(tmp) {
                     db.ref("/user/" + tmp.userId).set(tmp);
                 }
             }
-        }else{
+        } else {
             tmp.lastTime = DateTimezone(8);
             db.ref("/user/" + tmp.userId).set(tmp);
         }
@@ -472,9 +469,9 @@ function pushWishList(tmp) {
 function pushGroup(tmp) {
     db.ref('/group/' + tmp).once('value', function (snapshot) {
         var data = snapshot.val();
-        if(data){
+        if (data) {
             console.log("Already exist");
-        }else{
+        } else {
             db.ref("/group/" + tmp).set({
                 groupId: tmp
             });
