@@ -235,13 +235,14 @@ function _botInit() {
         });
     });
     bot.on('unfollow', function (event) {
-        event.source.profile().then(function (profile) {
-            // pushActionLog({
-            //     userId: profile.userId,
-            //     action: "unfollow"
-            // });
-            console.log(profile);
-        });
+        // event.source.profile().then(function (profile) {
+        //     // pushActionLog({
+        //     //     userId: profile.userId,
+        //     //     action: "unfollow"
+        //     // });
+        //     // console.log(profile);
+        // });
+        console.log(event);
     });
 }
 
