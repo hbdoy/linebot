@@ -466,10 +466,6 @@ function pushUserData(tmp) {
     // 大雷2: 使用者在group中，照片網址和個人資料中的不一樣
     var inGroup = false;
     var needUpdate = false;
-    // 讓群組個人資料和個人資料照片網址一致
-    if (tmp.pictureUrl){
-        tmp.pictureUrl = tmp.pictureUrl.replace(/dl./, "").replace(/https/, "http");
-    }
     db.ref('/user/' + tmp.userId).once('value', function (snapshot) {
         var data = snapshot.val();
         if (tmp.groupId) {
