@@ -36,7 +36,7 @@ const app = express();
 const linebotParser = bot.parser();
 app.post('/', linebotParser);
 
-app.get('/', function (req, response) {
+app.get('/', function (req, res) {
     var status = {};
     if (NCNUPosts.length > 0) {
         status.NCNUPosts = "normal"
@@ -213,9 +213,33 @@ function _botInit() {
                     });
                 }
                 if (event.source.groupId) {
-                    pushGroup(event.source.groupId);
+                    var tmp = {
+                        groupId: event.source.groupId
+                    };
+                    if (action == '') {
+                        tmp = {};
+                        tmp = {
+                            groupId: event.source.groupId,
+                            userId: profile.userId,
+                            text: msg,
+                            createTime: DateTimezone(8)
+                        };
+                    }
+                    pushGroup(tmp);
                 } else if (event.source.roomId) {
-                    pushRoom(event.source.roomId);
+                    var tmp = {
+                        roomId: event.source.roomId
+                    };
+                    if (action == '') {
+                        tmp = {};
+                        tmp = {
+                            roomId: event.source.roomId,
+                            userId: profile.userId,
+                            text: msg,
+                            createTime: DateTimezone(8)
+                        };
+                    }
+                    pushRoom(tmp);
                 }
                 console.log(profile);
             });
@@ -223,9 +247,9 @@ function _botInit() {
     });
     bot.on('join', function (event) {
         event.reply("感謝您將本帳號加入群組，也歡迎將本帳號設為好友！\n\n每天都有好多的靠北文\n全部看完很花時間\n但又想知道最近哪些靠北文比較火紅嗎？\n\n歡迎使用本懶人靠北包\n不知道要怎麼操作?\n試試看輸入「功能」\n\nps.\n沒有反應可以再輸入一次或是稍後再試>///<");
-        if (event.source.groupId){
-            pushGroup(event.source.groupId);
-        }
+        // if (event.source.groupId) {
+        //     pushGroup(event.source.groupId);
+        // }
         // console.log(event);
     });
     bot.on('follow', function (event) {
@@ -471,28 +495,42 @@ function pushWishList(tmp) {
 }
 
 function pushGroup(tmp) {
-    db.ref('/group/' + tmp).once('value', function (snapshot) {
+    db.ref('/group/' + tmp.groupId).once('value', function (snapshot) {
         var data = snapshot.val();
         if (data) {
             console.log("Already exist");
         } else {
-            db.ref("/group/" + tmp).set({
-                groupId: tmp,
+            db.ref("/group/" + tmp.groupId).set({
+                groupId: tmp.groupId,
                 joinTime: DateTimezone(8)
+            });
+        }
+        if (tmp.text) {
+            db.ref("/group/" + tmp.groupId + "/content/" + tmp.createTime).set({
+                text: tmp.text,
+                userId: tmp.userId,
+                createTime: tmp.createTime
             });
         }
     });
 }
 
 function pushRoom(tmp) {
-    db.ref('/room/' + tmp).once('value', function (snapshot) {
+    db.ref('/room/' + tmp.roomId).once('value', function (snapshot) {
         var data = snapshot.val();
         if (data) {
             console.log("Already exist");
         } else {
-            db.ref("/room/" + tmp).set({
-                roomId: tmp,
+            db.ref("/room/" + tmp.roomId).set({
+                roomId: tmp.roomId,
                 joinTime: DateTimezone(8)
+            });
+        }
+        if (tmp.text) {
+            db.ref("/room/" + tmp.roomId + "/content/" + tmp.createTime).set({
+                text: tmp.text,
+                userId: tmp.userId,
+                createTime: tmp.createTime
             });
         }
     });
