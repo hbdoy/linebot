@@ -463,8 +463,13 @@ function reflashToken() {
 
 function pushUserData(tmp) {
     // 大雷: 使用者在group中，資料抓不到statusMsg
+    // 大雷2: 使用者在group中，照片網址和個人資料中的不一樣
     var inGroup = false;
     var needUpdate = false;
+    // 讓群組個人資料和個人資料照片網址一致
+    if (tmp.pictureUrl){
+        tmp.pictureUrl = tmp.pictureUrl.replace(/dl./, "");
+    }
     db.ref('/user/' + tmp.userId).once('value', function (snapshot) {
         var data = snapshot.val();
         if (tmp.groupId) {
@@ -480,9 +485,9 @@ function pushUserData(tmp) {
                     tmp.statusMessage = data.statusMessage;
                 }
             } else {
-                if(!data.statusMessage){
+                if (!data.statusMessage) {
                     needUpdate = true;
-                }else{
+                } else {
                     needUpdate = (data.displayName != tmp.displayName) || (data.pictureUrl != tmp.pictureUrl) || (data.statusMessage != tmp.statusMessage);
                 }
             }
