@@ -472,7 +472,7 @@ function getNewBeautyImg() {
             var tmp = $(e).attr("href");
             if ((tmp.indexOf(".jpg") != -1) || (tmp.indexOf(".png") != -1)) {
                 // 過濾掉網址可能是xxx.mp4.jpg的影片
-                if ((tmp.indexOf(".mp4") == -1) && (tmp.indexOf(".gif") == -1)) {
+                if ((tmp.indexOf(".mp4") == -1) && (tmp.indexOf(".gif") == -1) && (tmp.indexOf("imgur") != -1)) {
                     var tmpp = tmp.replace("https://i.imgur.com/", "").split(".");
                     var key = tmpp[0];
                     if (!beautyImg_check.key) {
