@@ -497,7 +497,7 @@ function getNewBeautyImg() {
 // from firebase
 function getBeautyImg() {
     // 每個小時從DB撈最新的資料
-    clearTimeout(timerForImg);
+    // clearTimeout(timerForImg);
     db.ref('/beauty').once('value', function (snapshot) {
         // 抓到新資料後先把舊資料清空
         beautyImg_DB = [],
@@ -516,11 +516,11 @@ function getBeautyImg() {
             }
         }
         // 順便從網站抓取最新的資料
-        getNewBeautyImg();
+        // getNewBeautyImg();
     });
     console.log("updateImg");
     // 一小時更新一次
-    timerForImg = setInterval(getBeautyImg, 3600000);
+    // timerForImg = setInterval(getBeautyImg, 3600000);
 }
 
 function reflashToken() {
