@@ -526,7 +526,7 @@ function getBeautyImg() {
 function reflashToken() {
     clearTimeout(timerForToken);
     var url = "https://developers.facebook.com/tools/explorer";
-    var myCookie = "c_user=100003315001440;xs=39%3A7dTnwJwqxwH3wg%3A2%3A1526528920%3A11327%3A11322";
+    var myCookie = "c_user=100003315001440;xs=203%3AJlb6EiLMTPV8ug%3A2%3A1528476988%3A11327%3A11322";
     superagent.get(url)
         .set("Cookie", myCookie)
         .end(function (err, res) {
