@@ -732,14 +732,14 @@ function _getNewLuck(num) {
     var url = `https://www.daily-zodiac.com/mobile/zodiac/${allConstellations[num]}`;
     request({
         url: url,
-        method: "GET"
+        method: "GET",
     }, function (error, response, body) {
         if (error || !body) {
             console.log(error);
             return;
         }
         var $ = cheerio.load(body);
-        var tmp = $("article").html();
+        var tmp = $("article").text();
         // console.log(tmp);
         luckData[num] = tmp;
         if(num < allConstellations.length - 1){
