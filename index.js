@@ -25,19 +25,22 @@ var bot = linebot({
     channelAccessToken: process.env.channelAccessToken
 });
 
-var timerForToken, timerForImg, timerForUpload;
+var timerForToken, timerForImg, timerForUpload, timerForLuck;
 var myToken = '';
 var NCNUPosts = [],
     NCNUPostsW = [],
     NCNUPostsM = [],
     beautyImg_new = [],
     beautyImg_DB = [],
-    beautyImg_check = {};
+    beautyImg_check = {},
+    allConstellations = [],
+    luckData = [];
 var data_in_group_wating_for_update = [],
     data_in_room_wating_for_update = [];
 
 reflashToken();
 getBeautyImg();
+_getNewLuck();
 uploadText();
 _botInit();
 
@@ -79,12 +82,20 @@ function _botInit() {
             var replyMsg = '';
             var counter = '';
             var action = '';
+            var allConstellationKeyWord_i = ["aquarius", "pisces", "aries", "taurus", "gemini", "cancer", "leo", "virgo", "libra", "scorpio", "sagittarius", "capricorn"];
+            var allConstellationKeyWord_ii = ["aqu", "pis", "ari", "tau", "gem", "can", "leo", "vir", "lib", "sco", "sag", "cap"];
+            var allConstellationKeyWord_iii = ["水瓶座", "雙魚座", "牡羊座", "金牛座", "雙子座", "巨蠍座", "獅子座", "處女座", "天秤座", "天蠍座", "射手座", "摩羯座"];
+            var allConstellationKeyWord_iv = ["水瓶", "雙魚", "牡羊", "金牛", "雙子", "巨蠍", "獅子", "處女", "天秤", "天蠍", "射手", "摩羯"];
+            var allConstellationKeyWord = allConstellationKeyWord_i.concat(allConstellationKeyWord_ii, allConstellationKeyWord_iii, allConstellationKeyWord_iv);
             if (msg == "功能") {
                 action = msg;
-                replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\n轉蛋: 抽美美的照片(圖片來源為網路，若是侵權請立即告知),\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n滾: 嗚嗚...,\n許願: 想要的功能目前還沒有嗎?";
+                replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\n轉蛋: 抽美美/帥帥的照片(圖片來源為網路，若是侵權請立即告知),\n星座運勢: 輸入想查詢的星座，ex:「摩羯座/魔羯/Cap」都可以~\n(文字來源為網路，若是侵權請立即告知)\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n滾: 嗚嗚...,\n許願: 想要的功能目前還沒有嗎?";
             } else if (msg == "說明") {
                 action = msg;
                 replyMsg = "沒有時間看靠北版?\n但又想知道最近大家再靠北什麼嗎?\n\n歡迎使用本機器人\n幫您統整近期/一週/一個月內的熱門文章\n(熱門文章: 透過演算法評量按讚、留言、分享數)\n\n用法: 直接輸入想使用的指令即可，ex: 「抓」\n\n這是閒暇之餘的作品\n部屬在免費空間\n沒有反應可以再輸入一次或是稍後再試\n當然也歡迎小額donate\n將會用在伺服器升級(應該啦)\n\n(圖片和文章來源皆為網路，並非用於營利用途，如有侵權請立即告知!)";
+            } else if (allConstellationKeyWord.indexOf(msg.toLocaleLowerCase()) != -1) {
+                action = "星座運勢";
+                replyMsg = "今日運勢:\n\n" + luckData[allConstellationKeyWord.indexOf(msg.toLocaleLowerCase())] + "\n\n(文字來源為網路，若是侵權請立即告知)";
             } else if (msg == "轉蛋") {
                 action = msg;
                 if (beautyImg_DB.length == 0) {
@@ -269,7 +280,7 @@ function _botInit() {
             pushGroup({
                 groupId: event.source.groupId
             });
-        }else if (event.source.roomId) {
+        } else if (event.source.roomId) {
             pushRoom({
                 roomId: event.source.roomId
             });
@@ -303,7 +314,6 @@ function _getPosts(url) {
         method: "GET"
     }, function (error, response, body) {
         if (error || !body) {
-            console.log("發生錯誤");
             console.log(error);
             return;
         }
@@ -357,7 +367,6 @@ function _getPostsM(url) {
         method: "GET"
     }, function (error, response, body) {
         if (error || !body) {
-            console.log("發生錯誤");
             console.log(error);
             return;
         }
@@ -410,7 +419,6 @@ function _getPostsW(url) {
         method: "GET"
     }, function (error, response, body) {
         if (error || !body) {
-            console.log("發生錯誤");
             console.log(error);
             return;
         }
@@ -463,7 +471,6 @@ function getNewBeautyImg() {
         method: "GET"
     }, function (error, response, body) {
         if (error || !body) {
-            console.log("發生錯誤");
             console.log(error);
             return;
         }
@@ -518,7 +525,7 @@ function getBeautyImg() {
         // 順便從網站抓取最新的資料
         getNewBeautyImg();
     });
-    console.log("updateImg");
+    console.log("Img update: finish!");
     // 一小時更新一次
     timerForImg = setInterval(getBeautyImg, 3600000);
 }
@@ -538,7 +545,7 @@ function reflashToken() {
             var tmpp = tmp[2].split("appID");
             var finalKey = tmpp[0].substr(5, 230).split("\\");
             myToken = finalKey[0];
-            console.log("Reflash!");
+            console.log("Token: reflash!");
             // 抓取前先清空
             NCNUPosts = [];
             NCNUPostsW = [];
@@ -581,7 +588,7 @@ function pushUserData(tmp) {
             if (needUpdate) {
                 tmp.lastTime = DateTimezone(8);
                 db.ref("/user/" + tmp.userId).set(tmp);
-                console.log("updateUserData");
+                console.log("Update User's Data");
             }
         } else {
             tmp.lastTime = DateTimezone(8);
@@ -620,9 +627,9 @@ function pushGroup(tmp) {
     });
 }
 
-function pushContentInGroup(){
+function pushContentInGroup() {
     var lastKey = 0;
-    for(var key in data_in_group_wating_for_update){
+    for (var key in data_in_group_wating_for_update) {
         if (data_in_group_wating_for_update[key].text) {
             db.ref("/group/" + data_in_group_wating_for_update[key].groupId + "/content").push({
                 text: data_in_group_wating_for_update[key].text,
@@ -665,7 +672,7 @@ function pushContentInRoom() {
     data_in_room_wating_for_update.splice(0, lastKey + 1);
 }
 
-function uploadText(){
+function uploadText() {
     clearTimeout(timerForUpload);
     pushContentInGroup();
     pushContentInRoom();
@@ -708,4 +715,36 @@ function getBigHousePosts() {
             // res.setHeader('Access-Control-Allow-Origin', '*');
             // res.status(200).send(JSON.stringify(re));
         })
+}
+
+// 爬取最新運勢，並更新進DB
+function _getNewLuck(num) {
+    clearTimeout(timerForLuck);
+    num = num || 0;
+    if(num == 0){
+        console.log("Update Constellation: start!");
+    }
+    allConstellations = ["Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn"];
+    var url = `https://www.daily-zodiac.com/mobile/zodiac/${allConstellations[num]}`;
+    request({
+        url: url,
+        method: "GET"
+    }, function (error, response, body) {
+        if (error || !body) {
+            console.log(error);
+            return;
+        }
+        var $ = cheerio.load(body);
+        var tmp = $("article").html();
+        // console.log(tmp);
+        luckData[num] = tmp;
+        if(num < allConstellations.length - 1){
+            _getNewLuck(++num);
+        }else{
+            // console.log(luckData.length);
+            console.log("Update Constellation: finish");
+        }
+    });
+    // 三小時更新一次
+    timerForLuck = setInterval(_getNewLuck, 3600000 * 3);
 }
