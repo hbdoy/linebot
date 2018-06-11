@@ -39,9 +39,9 @@ var data_in_group_wating_for_update = [],
     data_in_room_wating_for_update = [];
 
 reflashToken();
-getBeautyImg();
+_getBeautyImg();
 _getNewLuck();
-uploadText();
+_uploadText();
 _botInit();
 
 const app = express();
@@ -89,13 +89,17 @@ function _botInit() {
             var allConstellationKeyWord = allConstellationKeyWord_i.concat(allConstellationKeyWord_ii, allConstellationKeyWord_iii, allConstellationKeyWord_iv);
             if (msg == "功能") {
                 action = msg;
-                replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\n轉蛋: 抽美美/帥帥的照片(圖片來源為網路，若是侵權請立即告知),\n星座運勢: 輸入想查詢的星座，ex:「摩羯座/魔羯/Cap」都可以~\n(文字來源為網路，若是侵權請立即告知)\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n滾: 嗚嗚...,\n許願: 想要的功能目前還沒有嗎?";
+                replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\nn轉蛋: 抽美美/帥帥的照片\n(圖片來源為網路，若是侵權請立即告知),\n星座運勢: 輸入想查詢的星座，\nex:「摩羯座/魔羯/Cap」都可以~\n(文字來源為網路，若是侵權請立即告知)\n\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者\n許願: 想要的功能目前還沒有嗎?,\n\n滾: 嗚嗚...";
             } else if (msg == "說明") {
                 action = msg;
                 replyMsg = "沒有時間看靠北版?\n但又想知道最近大家再靠北什麼嗎?\n\n歡迎使用本機器人\n幫您統整近期/一週/一個月內的熱門文章\n(熱門文章: 透過演算法評量按讚、留言、分享數)\n\n用法: 直接輸入想使用的指令即可，ex: 「抓」\n\n這是閒暇之餘的作品\n部屬在免費空間\n沒有反應可以再輸入一次或是稍後再試\n當然也歡迎小額donate\n將會用在伺服器升級(應該啦)\n\n(圖片和文章來源皆為網路，並非用於營利用途，如有侵權請立即告知!)";
             } else if (allConstellationKeyWord.indexOf(msg.toLocaleLowerCase()) != -1) {
                 action = "星座運勢";
-                replyMsg = "今日運勢:\n\n" + luckData[allConstellationKeyWord.indexOf(msg.toLocaleLowerCase())] + "\n\n(文字來源為網路，若是侵權請立即告知)";
+                if (luckData.length == 12){
+                    replyMsg = "今日運勢:\n\n" + luckData[(allConstellationKeyWord.indexOf(msg.toLocaleLowerCase()) % 12)] + "\n\n(文字來源為網路，若是侵權請立即告知)";
+                }else{
+                    replyMsg = "目前在更新，請稍後再試>///<";
+                }
             } else if (msg == "轉蛋") {
                 action = msg;
                 if (beautyImg_DB.length == 0) {
@@ -464,7 +468,7 @@ function _getPostsW(url) {
 }
 
 // 爬取最新圖片，並更新進DB
-function getNewBeautyImg() {
+function _getNewBeautyImg() {
     var url = "https://ptt-beauty-images.herokuapp.com/";
     request({
         url: url,
@@ -502,7 +506,7 @@ function getNewBeautyImg() {
 }
 
 // from firebase
-function getBeautyImg() {
+function _getBeautyImg() {
     // 每個小時從DB撈最新的資料
     clearTimeout(timerForImg);
     db.ref('/beauty').once('value', function (snapshot) {
@@ -523,11 +527,11 @@ function getBeautyImg() {
             }
         }
         // 順便從網站抓取最新的資料
-        getNewBeautyImg();
+        _getNewBeautyImg();
     });
     console.log("Img update: finish!");
     // 一小時更新一次
-    timerForImg = setInterval(getBeautyImg, 3600000);
+    timerForImg = setInterval(_getBeautyImg, 3600000);
 }
 
 function reflashToken() {
@@ -672,12 +676,12 @@ function pushContentInRoom() {
     data_in_room_wating_for_update.splice(0, lastKey + 1);
 }
 
-function uploadText() {
+function _uploadText() {
     clearTimeout(timerForUpload);
     pushContentInGroup();
     pushContentInRoom();
     // 每10分鐘上傳一次資料
-    timerForUpload = setInterval(uploadText, 600000);
+    timerForUpload = setInterval(_uploadText, 600000);
     console.log("textUpload");
 }
 
@@ -741,7 +745,7 @@ function _getNewLuck(num) {
         if(num < allConstellations.length - 1){
             _getNewLuck(++num);
         }else{
-            // console.log(luckData.length);
+            // console.log(luckData);
             console.log("Update Constellation: finish");
         }
     });
