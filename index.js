@@ -227,6 +227,31 @@ function _botInit() {
             } else if (msg.split("許願=").length == 2) {
                 action = "提交許願";
                 replyMsg = "感謝你讓我知道你掉的願望，有朝一日讓我替你實現 <3\n我不是神，卻想給你陽光";
+            }   else if(msg == "bottest"){
+                waitForAjax = true;
+                event.reply({
+                    type: 'template',
+                    altText: 'this is a buttons template',
+                    template: {
+                        type: 'buttons',
+                        thumbnailImageUrl: "https://i.imgur.com/00yiKDW.jpg",
+                        title: 'Menu',
+                        text: 'Please select',
+                        actions: [{
+                            type: 'postback',
+                            label: 'Buy',
+                            data: 'action=buy&itemid=123'
+                        }, {
+                            type: 'postback',
+                            label: 'Add to cart',
+                            data: 'action=add&itemid=123'
+                        }, {
+                            type: 'uri',
+                            label: 'View detail',
+                            uri: 'http://www.google.com'
+                        }]
+                    }
+                });
             }
             if (!waitForAjax) {
                 event.reply(replyMsg).then(function (data) {
