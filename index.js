@@ -235,8 +235,6 @@ function _botInit() {
                     template: {
                         type: 'buttons',
                         thumbnailImageUrl: "https://i.imgur.com/00yiKDW.jpg",
-                        title: 'Menu',
-                        text: 'Please select',
                         actions: [{
                             type: 'postback',
                             label: 'Buy',
