@@ -497,7 +497,7 @@ function getNewBeautyImg() {
 // from firebase
 function getBeautyImg() {
     // 每個小時從DB撈最新的資料
-    // clearTimeout(timerForImg);
+    clearTimeout(timerForImg);
     db.ref('/beauty').once('value', function (snapshot) {
         // 抓到新資料後先把舊資料清空
         beautyImg_DB = [],
@@ -516,11 +516,11 @@ function getBeautyImg() {
             }
         }
         // 順便從網站抓取最新的資料
-        // getNewBeautyImg();
+        getNewBeautyImg();
     });
     console.log("updateImg");
     // 一小時更新一次
-    // timerForImg = setInterval(getBeautyImg, 3600000);
+    timerForImg = setInterval(getBeautyImg, 3600000);
 }
 
 function reflashToken() {
@@ -687,7 +687,8 @@ function DateTimezone(offset) {
 }
 
 function getBigHousePosts() {
-    var url = "https://www.facebook.com/search/top/?q=%E6%9A%A8%E5%A4%A7%E5%A4%A7%E6%9C%AC%E7%87%9F&filters_rp_group=%7B%22name%22%3A%22group_posts%22%2C%22args%22%3A%22234446386568740%22%7D&filters_rp_author=%7B%22name%22%3A%22author_friends_groups%22%2C%22args%22%3A%22%22%7D&filters_rp_creation_time=%7B%22name%22%3A%22creation_time%22%2C%22args%22%3A%22%7B%5C%22start_month%5C%22%3A%5C%222018-05%5C%22%2C%5C%22end_month%5C%22%3A%5C%222018-05%5C%22%7D%22%7D";
+    var url = 'https://www.facebook.com/search/top/?q=暨大大本營&filters_rp_group={"name":"group_posts","args":"234446386568740"}&filters_rp_author={"name":"author_friends_groups","args":""}&filters_rp_creation_time={"name":"creation_time","args":"{ \"start_year\":\"2018\",\"start_month\":\"2018-06\",\"end_year\":\"2018\",\"end_month\":\"2018-06\"}" }';
+    // var url = "https://www.facebook.com/groups/234446386568740/?sorting_setting=RECENT_ACTIVITY";
     var myCookie = "c_user=100003315001440;xs=39%3A7dTnwJwqxwH3wg%3A2%3A1526528920%3A11327%3A11322";
     superagent.get(url)
         .set("Cookie", myCookie)
