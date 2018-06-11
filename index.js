@@ -96,7 +96,7 @@ function _botInit() {
             } else if (allConstellationKeyWord.indexOf(msg.toLocaleLowerCase()) != -1) {
                 action = "星座運勢";
                 if (luckData.length == 12){
-                    replyMsg = "今日運勢:\n\n" + luckData[(allConstellationKeyWord.indexOf(msg.toLocaleLowerCase()) % 12)] + "\n\n(文字來源為網路，若是侵權請立即告知)";
+                    replyMsg = "今日運勢:\n\n" + luckData[(allConstellationKeyWord.indexOf(msg.toLocaleLowerCase()) % 12)];
                 }else{
                     replyMsg = "目前在更新，請稍後再試>///<";
                 }
@@ -741,11 +741,11 @@ function _getNewLuck(num) {
         var $ = cheerio.load(body);
         var tmp = $("article").text();
         // console.log(tmp);
-        luckData[num] = tmp;
+        luckData[num] = tmp.replace(/\n/g, "").replace(/ /g, "");
         if(num < allConstellations.length - 1){
             _getNewLuck(++num);
         }else{
-            // console.log(luckData);
+            console.log(luckData);
             console.log("Update Constellation: finish");
         }
     });
