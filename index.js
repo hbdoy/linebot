@@ -239,7 +239,11 @@ function _botInit() {
                             type: 'message',
                             label: 'Yes',
                             text: 'yes'
-                        }, ]
+                        }, {
+                            type: 'message',
+                            label: 'No',
+                            text: 'no'
+                        }]
                     }
                 });
             }
