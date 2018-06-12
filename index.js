@@ -112,9 +112,9 @@ function _botInit() {
                     }
                     while (beautyImg_check[beautyImg_DB[num].key].reportNum != 0);
                     event.reply([{
-                        // type: 'image',
-                        // originalContentUrl: beautyImg_DB[num].url,
-                        // previewImageUrl: beautyImg_DB[num].url
+                        type: 'image',
+                        originalContentUrl: beautyImg_DB[num].url,
+                        previewImageUrl: beautyImg_DB[num].url
                     }, {
                         type: 'template',
                         altText: '手機版才能檢舉圖片~',
@@ -125,7 +125,8 @@ function _botInit() {
                             actions: [{
                                 type: 'postback',
                                 label: '檢舉',
-                                data: `report&${beautyImg_DB[num].key}`
+                                data: 'report&123'
+                                // data: `report&${beautyImg_DB[num].key}`
                             }, {
                                 type: 'postback',
                                 label: '算了吧',
