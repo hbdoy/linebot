@@ -125,8 +125,7 @@ function _botInit() {
                             actions: [{
                                 type: 'postback',
                                 label: '檢舉',
-                                data: 'report&123'
-                                // data: `report&${beautyImg_DB[num].key}`
+                                data: 'report&' + beautyImg_DB[num].key
                             }, {
                                 type: 'postback',
                                 label: '算了吧',
