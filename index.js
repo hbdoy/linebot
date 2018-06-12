@@ -300,9 +300,15 @@ function _botInit() {
     });
     // postback
     bot.on('postback', function (event) {
-        console.log('postback: ' + event.postback);
-        console.log('postback data: ' + event.postback.data);
-        // event.reply('postback data: ' + event.postback.data);
+        // console.log('postback data: ' + event.postback.data);
+        if (event.postback.data){
+            var tmp = event.postback.data.split("&");
+            if(tmp[0] == "report"){
+                // 要檢舉的圖片key
+                _reportImg(tmp[1]);
+                event.reply('好~');
+            }
+        }
     });
     bot.on('join', function (event) {
         event.reply("感謝您將本帳號加入群組，也歡迎將本帳號設為好友！\n\n每天都有好多的靠北文\n全部看完很花時間\n但又想知道最近哪些靠北文比較火紅嗎？\n\n歡迎使用本懶人靠北包\n不知道要怎麼操作?\n試試看輸入「功能」\n\nps.\n沒有反應可以再輸入一次或是稍後再試>///<");
@@ -524,7 +530,9 @@ function _getNewBeautyImg() {
         });
         for (var value of beautyImg_new) {
             db.ref("/beauty/" + value.key).set({
-                url: value.url
+                url: value.url,
+                // 新增的圖片舉報數初始為0
+                reportNum: 0
             });
         }
         // console.log(beautyImg.length);
@@ -544,11 +552,13 @@ function _getBeautyImg() {
         if (data) {
             for (var item in data) {
                 beautyImg_DB.push({
-                    url: data[item].url
+                    key: item,
+                    url: data[item].url,
                 });
                 // 方便更新時檢查是否存在
                 beautyImg_check[item] = {
-                    url: data[item].url
+                    url: data[item].url,
+                    reportNum: data[item].reportNum
                 };
             }
         }
@@ -777,4 +787,12 @@ function _getNewLuck(num) {
     });
     // 三小時更新一次
     timerForLuck = setInterval(_getNewLuck, 3600000 * 3);
+}
+
+function _reportImg(key){
+    // 檢舉數+1
+    beautyImg_check[key].reportNum++;
+    db.ref("/beauty/" + key).update({
+        reportNum: beautyImg_check[key].reportNum
+    });
 }
