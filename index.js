@@ -231,18 +231,20 @@ function _botInit() {
                 waitForAjax = true;
                 event.reply({
                     type: 'template',
-                    altText: 'this is a confirm template',
+                    altText: 'this is a buttons template',
                     template: {
-                        type: 'confirm',
+                        type: 'buttons',
+                        thumbnailImageUrl: '',
+                        title: 'Menu',
                         text: '檢舉',
                         actions: [{
-                            type: 'message',
-                            label: 'Yes',
-                            text: 'yes'
+                            type: 'postback',
+                            label: '檢舉',
+                            data: 'action=buy&itemid=123'
                         }, {
-                            type: 'message',
-                            label: 'No',
-                            text: 'no'
+                            type: 'postback',
+                            label: '算了吧',
+                            data: 'action=add&itemid=123'
                         }]
                     }
                 });
