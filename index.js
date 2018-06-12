@@ -234,7 +234,6 @@ function _botInit() {
                     altText: 'this is a buttons template',
                     template: {
                         type: 'buttons',
-                        thumbnailImageUrl: '',
                         title: 'Menu',
                         text: '檢舉',
                         actions: [{
