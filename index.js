@@ -230,19 +230,17 @@ function _botInit() {
             }   else if(msg == "bottest"){
                 waitForAjax = true;
                 event.reply({
-                    type: 'imagemap',
-                    baseUrl: 'https://i.imgur.com/00yiKDW.jpg',
-                    altText: 'this is an imagemap',
-                    baseSize: { height: 1040, width: 1040 },
-                    actions: [{
-                        type: 'uri',
-                        linkUri: 'https://www.google.com/',
-                        area: { x: 0, y: 0, width: 520, height: 1040 }
-                    }, {
-                        type: 'message',
-                        text: 'hello',
-                        area: { x: 520, y: 0, width: 520, height: 1040 }
-                    }]
+                    type: 'template',
+                    altText: 'this is a confirm template',
+                    template: {
+                        type: 'confirm',
+                        text: '檢舉',
+                        actions: [{
+                            type: 'message',
+                            label: 'Yes',
+                            text: 'yes'
+                        }, ]
+                    }
                 });
             }
             if (!waitForAjax) {
