@@ -95,9 +95,9 @@ function _botInit() {
                 replyMsg = "沒有時間看靠北版?\n但又想知道最近大家再靠北什麼嗎?\n\n歡迎使用本機器人\n幫您統整近期/一週/一個月內的熱門文章\n(熱門文章: 透過演算法評量按讚、留言、分享數)\n\n用法: 直接輸入想使用的指令即可，ex: 「抓」\n\n這是閒暇之餘的作品\n部屬在免費空間\n沒有反應可以再輸入一次或是稍後再試\n當然也歡迎小額donate\n將會用在伺服器升級(應該啦)\n\n(圖片和文章來源皆為網路，並非用於營利用途，如有侵權請立即告知!)";
             } else if (allConstellationKeyWord.indexOf(msg.toLocaleLowerCase()) != -1) {
                 action = "星座運勢";
-                if (luckData.length == 12){
+                if (luckData.length == 12) {
                     replyMsg = "今日運勢:\n\n" + luckData[(allConstellationKeyWord.indexOf(msg.toLocaleLowerCase()) % 12)];
-                }else{
+                } else {
                     replyMsg = "目前在更新，請稍後再試>///<";
                 }
             } else if (msg == "轉蛋") {
@@ -106,12 +106,33 @@ function _botInit() {
                     replyMsg = "現在沒有圖片，請稍後再試>///<";
                 } else {
                     waitForAjax = true;
-                    var num = Math.floor(Math.random() * beautyImg_DB.length);
-                    event.reply({
-                        type: 'image',
-                        originalContentUrl: beautyImg_DB[num].url,
-                        previewImageUrl: beautyImg_DB[num].url
-                    });
+                    var num;
+                    do {
+                        num = Math.floor(Math.random() * beautyImg_DB.length);
+                    }
+                    while (beautyImg_check[beautyImg_DB[num].key].reportNum != 0);
+                    event.reply([{
+                        // type: 'image',
+                        // originalContentUrl: beautyImg_DB[num].url,
+                        // previewImageUrl: beautyImg_DB[num].url
+                    }, {
+                        type: 'template',
+                        altText: '手機版才能檢舉圖片~',
+                        template: {
+                            type: 'buttons',
+                            title: '檢舉',
+                            text: '此圖片將不會再出現',
+                            actions: [{
+                                type: 'postback',
+                                label: '檢舉',
+                                data: `report&${beautyImg_DB[num].key}`
+                            }, {
+                                type: 'postback',
+                                label: '算了吧',
+                                data: 'nothing&666'
+                            }]
+                        }
+                    }]);
                 }
             } else if (msg == "我是誰") {
                 action = msg;
@@ -227,7 +248,7 @@ function _botInit() {
             } else if (msg.split("許願=").length == 2) {
                 action = "提交許願";
                 replyMsg = "感謝你讓我知道你掉的願望，有朝一日讓我替你實現 <3\n我不是神，卻想給你陽光";
-            }   else if(msg == "bottest"){
+            } else if (msg == "bottest") {
                 waitForAjax = true;
                 event.reply({
                     type: 'template',
@@ -301,9 +322,9 @@ function _botInit() {
     // postback
     bot.on('postback', function (event) {
         // console.log('postback data: ' + event.postback.data);
-        if (event.postback.data){
+        if (event.postback.data) {
             var tmp = event.postback.data.split("&");
-            if(tmp[0] == "report"){
+            if (tmp[0] == "report") {
                 // 要檢舉的圖片key
                 _reportImg(tmp[1]);
                 event.reply('好~');
@@ -761,7 +782,7 @@ function getBigHousePosts() {
 function _getNewLuck(num) {
     clearTimeout(timerForLuck);
     num = num || 0;
-    if(num == 0){
+    if (num == 0) {
         console.log("Update Constellation: start!");
     }
     allConstellations = ["Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn"];
@@ -778,9 +799,9 @@ function _getNewLuck(num) {
         var tmp = $("article").text();
         // console.log(tmp);
         luckData[num] = tmp.replace(/\n/g, "").replace(/ /g, "");
-        if(num < allConstellations.length - 1){
+        if (num < allConstellations.length - 1) {
             _getNewLuck(++num);
-        }else{
+        } else {
             console.log(luckData);
             console.log("Update Constellation: finish");
         }
@@ -789,7 +810,7 @@ function _getNewLuck(num) {
     timerForLuck = setInterval(_getNewLuck, 3600000 * 3);
 }
 
-function _reportImg(key){
+function _reportImg(key) {
     // 檢舉數+1
     beautyImg_check[key].reportNum++;
     db.ref("/beauty/" + key).update({
