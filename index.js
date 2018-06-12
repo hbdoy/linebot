@@ -300,7 +300,7 @@ function _botInit() {
     });
     // postback
     bot.on('postback', function (event) {
-        console.log('postback: ' + event);
+        console.log('postback: ' + event.postback);
         console.log('postback data: ' + event.postback.data);
         // event.reply('postback data: ' + event.postback.data);
     });
