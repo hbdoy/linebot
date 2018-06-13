@@ -85,8 +85,8 @@ function _botInit() {
             var action = '';
             var allConstellationKeyWord_i = ["aquarius", "pisces", "aries", "taurus", "gemini", "cancer", "leo", "virgo", "libra", "scorpio", "sagittarius", "capricorn"];
             var allConstellationKeyWord_ii = ["aqu", "pis", "ari", "tau", "gem", "can", "leo", "vir", "lib", "sco", "sag", "cap"];
-            var allConstellationKeyWord_iii = ["水瓶座", "雙魚座", "牡羊座", "金牛座", "雙子座", "巨蟹座", "獅子座", "處女座", "天秤座", "天蠍座", "射手座", "摩羯座"];
-            var allConstellationKeyWord_iv = ["水瓶", "雙魚", "牡羊", "金牛", "雙子", "巨蟹", "獅子", "處女", "天秤", "天蠍", "射手", "摩羯"];
+            var allConstellationKeyWord_iii = ["水瓶座", "雙魚座", "牡羊座", "金牛座", "雙子座", "巨蟹座", "獅子座", "處女座", "天秤座", "天蠍座", "射手座", "魔羯座"];
+            var allConstellationKeyWord_iv = ["水瓶", "雙魚", "牡羊", "金牛", "雙子", "巨蟹", "獅子", "處女", "天秤", "天蠍", "射手", "魔羯"];
             var allConstellationKeyWord = allConstellationKeyWord_i.concat(allConstellationKeyWord_ii, allConstellationKeyWord_iii, allConstellationKeyWord_iv);
             if (msg == "功能") {
                 action = msg;
