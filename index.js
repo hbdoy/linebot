@@ -40,6 +40,7 @@ var data_in_group_wating_for_update = [],
     data_in_room_wating_for_update = [];
 
 reflashToken();
+updateUserConstellation();
 _getBeautyImg();
 _getNewLuck();
 _uploadText();
