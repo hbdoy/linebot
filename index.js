@@ -85,12 +85,12 @@ function _botInit() {
             var action = '';
             var allConstellationKeyWord_i = ["aquarius", "pisces", "aries", "taurus", "gemini", "cancer", "leo", "virgo", "libra", "scorpio", "sagittarius", "capricorn"];
             var allConstellationKeyWord_ii = ["aqu", "pis", "ari", "tau", "gem", "can", "leo", "vir", "lib", "sco", "sag", "cap"];
-            var allConstellationKeyWord_iii = ["水瓶座", "雙魚座", "牡羊座", "金牛座", "雙子座", "巨蠍座", "獅子座", "處女座", "天秤座", "天蠍座", "射手座", "摩羯座"];
-            var allConstellationKeyWord_iv = ["水瓶", "雙魚", "牡羊", "金牛", "雙子", "巨蠍", "獅子", "處女", "天秤", "天蠍", "射手", "摩羯"];
+            var allConstellationKeyWord_iii = ["水瓶座", "雙魚座", "牡羊座", "金牛座", "雙子座", "巨蟹座", "獅子座", "處女座", "天秤座", "天蠍座", "射手座", "摩羯座"];
+            var allConstellationKeyWord_iv = ["水瓶", "雙魚", "牡羊", "金牛", "雙子", "巨蟹", "獅子", "處女", "天秤", "天蠍", "射手", "摩羯"];
             var allConstellationKeyWord = allConstellationKeyWord_i.concat(allConstellationKeyWord_ii, allConstellationKeyWord_iii, allConstellationKeyWord_iv);
             if (msg == "功能") {
                 action = msg;
-                replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\n\n轉蛋: 抽美美/帥帥的照片\n(圖片來源為網路，若是侵權請立即告知),\n\n今日運勢: 輸入想查詢的星座，\nex:「摩羯座/魔羯/Cap」~\n(文字來源為網路，若是侵權請立即告知)\n\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n許願: 想要的功能目前沒有嗎?\n\n滾: 嗚嗚...";
+                replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\n\n轉蛋: 抽美美/帥帥的照片\n(圖片來源為網路，若是侵權請立即告知),\n\n今日運勢: 輸入想查詢的星座，\nex:「摩羯座/魔羯/Cap」~\n(文字來源為網路，若是侵權請立即告知)\n\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n許願: 想要的功能目前沒有嗎?\n\n滾: 嗚嗚...\n\n以上功能使用方式為直接輸入關鍵字\n就會執行或是看到該功能更多說明\nex: 輸入「許願」\n就會教你怎麼許願 >///<";
             } else if (msg == "說明") {
                 action = msg;
                 replyMsg = "沒有時間看靠北版?\n但又想知道最近大家再靠北什麼嗎?\n\n歡迎使用本機器人\n幫您統整近期/一週/一個月內的熱門文章\n(熱門文章: 透過演算法評量按讚、留言、分享數)\n\n用法: 直接輸入想使用的指令即可，ex: 「抓」\n\n這是閒暇之餘的作品\n部屬在免費空間\n沒有反應可以再輸入一次或是稍後再試\n當然也歡迎小額donate\n將會用在伺服器升級(應該啦)\n\n(圖片和文章來源皆為網路，並非用於營利用途，如有侵權請立即告知!)";
