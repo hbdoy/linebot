@@ -114,7 +114,7 @@ function _botInit() {
                             event.reply(replyMsg);
                         }
                     } else{
-                        replyMsg = "直接輸入想查詢的星座\n「ex: 水瓶座/水瓶/aqu」。\n另外可以儲存您的星座，之後就可以直接點選查詢，而不用再輸入星座\n。\n\n儲存教學: 直接輸入「我=xx座」~";
+                        replyMsg = "直接輸入想查詢的星座\n「ex: 水瓶座/水瓶/aqu」\n\n另外可以儲存您的星座，之後就可以直接點選查詢，而不用再輸入星座\n\n儲存教學: 直接輸入「我=xx座」\nex:「我=水瓶座」";
                         event.reply(replyMsg);
                     }
                 });
