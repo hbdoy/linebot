@@ -88,7 +88,7 @@ function _botInit() {
             var allConstellationKeyWord_iii = ["水瓶座", "雙魚座", "牡羊座", "金牛座", "雙子座", "巨蟹座", "獅子座", "處女座", "天秤座", "天蠍座", "射手座", "摩羯座"];
             var allConstellationKeyWord_iv = ["水瓶", "雙魚", "牡羊", "金牛", "雙子", "巨蟹", "獅子", "處女", "天秤", "天蠍", "射手", "摩羯"];
             var allConstellationKeyWord = allConstellationKeyWord_i.concat(allConstellationKeyWord_ii, allConstellationKeyWord_iii, allConstellationKeyWord_iv);
-            msg.replace("魔羯", "摩羯");
+            msg = msg.replace("魔羯", "摩羯");
             if (msg == "功能") {
                 action = msg;
                 replyMsg = "抓: 查看最近熱門文章,\n抓週: 查看7天內熱門文章,\n抓月: 查看30天內熱門文章,\n\n轉蛋: 抽美美/帥帥的照片\n(圖片來源為網路，若是侵權請立即告知),\n\n今日運勢: 輸入想查詢的星座，\nex:「摩羯座/魔羯/Cap」~\n(文字來源為網路，若是侵權請立即告知)\n\n說明: 查看說明,\n我是誰: 查看我是誰,\n誰最帥: 查看誰最帥,\n聯絡: 聯絡作者,\n許願: 想要的功能目前沒有嗎?\n\n滾: 嗚嗚...\n\n以上功能使用方式為直接輸入關鍵字\n就會執行或是看到該功能更多說明\nex: 輸入「許願」\n就會教你怎麼許願 >///<";
