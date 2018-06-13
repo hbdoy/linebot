@@ -34,7 +34,8 @@ var NCNUPosts = [],
     beautyImg_DB = [],
     beautyImg_check = {},
     allConstellations = [],
-    luckData = [];
+    luckData = [],
+    allUserConstellation = {};
 var data_in_group_wating_for_update = [],
     data_in_room_wating_for_update = [];
 
@@ -96,10 +97,27 @@ function _botInit() {
             } else if (allConstellationKeyWord.indexOf(msg.toLocaleLowerCase()) != -1) {
                 action = "星座運勢";
                 if (luckData.length == 12) {
-                    replyMsg = "今日運勢:\n\n" + luckData[(allConstellationKeyWord.indexOf(msg.toLocaleLowerCase()) % 12)];
+                    replyMsg = allConstellationKeyWord_iii[(allConstellationKeyWord.indexOf(msg.toLocaleLowerCase()) % 12)] + "今日運勢:\n\n" + luckData[(allConstellationKeyWord.indexOf(msg.toLocaleLowerCase()) % 12)];
                 } else {
                     replyMsg = "目前在更新，請稍後再試>///<";
                 }
+            } else if (msg == "今日運勢") {
+                action = msg;
+                waitForAjax = true;
+                event.source.profile().then(function (profile) {
+                    if (allUserConstellation[profile.userId]) {
+                        if (luckData.length == 12) {
+                            replyMsg = allConstellationKeyWord_iii[(allConstellationKeyWord.indexOf(allUserConstellation[profile.userId].content.toLocaleLowerCase()) % 12)] + "今日運勢:\n\n" + luckData[(allConstellationKeyWord.indexOf(allUserConstellation[profile.userId].content.toLocaleLowerCase()) % 12)];
+                            event.reply(replyMsg);
+                        } else {
+                            replyMsg = "目前在更新，請稍後再試>///<";
+                            event.reply(replyMsg);
+                        }
+                    } else{
+                        replyMsg = "直接輸入想查詢的星座\n「ex: 水瓶座/水瓶/aqu」。\n另外可以儲存您的星座，之後就可以直接點選查詢，而不用再輸入星座\n。\n\n儲存教學: 直接輸入「我=xx座」~";
+                        event.reply(replyMsg);
+                    }
+                });
             } else if (msg == "轉蛋") {
                 action = msg;
                 if (beautyImg_DB.length == 0) {
@@ -248,6 +266,13 @@ function _botInit() {
             } else if (msg.split("許願=").length == 2) {
                 action = "提交許願";
                 replyMsg = "感謝你讓我知道你掉的願望，有朝一日讓我替你實現 <3\n我不是神，卻想給你陽光";
+            } else if (msg.split("我=").length == 2) {
+                if (allConstellationKeyWord.indexOf(msg.toLocaleLowerCase().split("我=")[1]) != -1) {
+                    action = "紀錄星座";
+                    replyMsg = "紀錄您的星座了，若是需要更改，再輸入一次新的指令就好~";
+                } else {
+                    replyMsg = "無法識別輸入的星座QQ";
+                }
             } else if (msg == "bottest") {
                 waitForAjax = true;
                 event.reply({
@@ -283,6 +308,11 @@ function _botInit() {
                     pushWishList({
                         userId: profile.userId,
                         content: msg.split("許願=")[1]
+                    });
+                } else if (action == "紀錄星座") {
+                    saveUserConstellation({
+                        userId: profile.userId,
+                        content: msg.split("我=")[1]
                     });
                 }
                 // 其餘直接將行為名稱存入
@@ -327,7 +357,7 @@ function _botInit() {
             if (tmp[0] == "report") {
                 // 要檢舉的圖片key
                 _reportImg(tmp[1]);
-                event.reply('好~');
+                event.reply('收到了~');
             }
         }
     });
@@ -815,5 +845,28 @@ function _reportImg(key) {
     beautyImg_check[key].reportNum++;
     db.ref("/beauty/" + key).update({
         reportNum: beautyImg_check[key].reportNum
+    });
+}
+
+function saveUserConstellation(data) {
+    db.ref("/constellation/" + data.userId).set({
+        content: data.content
+    }).then(() => {
+        updateUserConstellation();
+    });
+}
+
+function updateUserConstellation() {
+    db.ref('/constellation').once('value', function (snapshot) {
+        // 抓到新資料後先把舊資料清空
+        allUserConstellation = {};
+        var data = snapshot.val();
+        if (data) {
+            for (var item in data) {
+                allUserConstellation[item] = {
+                    content: data[item].content,
+                };
+            }
+        }
     });
 }
