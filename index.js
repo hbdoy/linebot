@@ -723,7 +723,7 @@ function pushGroup(tmp) {
 function pushContentInGroup() {
     var lastKey = 0;
     for (var key in data_in_group_wating_for_update) {
-        if (data_in_group_wating_for_update[key].text) {
+        if (data_in_group_wating_for_update[key].text != "") {
             db.ref("/group/" + data_in_group_wating_for_update[key].groupId + "/content").push({
                 text: data_in_group_wating_for_update[key].text,
                 userId: data_in_group_wating_for_update[key].userId,
@@ -753,7 +753,7 @@ function pushRoom(tmp) {
 function pushContentInRoom() {
     var lastKey = 0;
     for (var key in data_in_room_wating_for_update) {
-        if (data_in_room_wating_for_update[key].text) {
+        if (data_in_room_wating_for_update[key].text != "") {
             db.ref("/room/" + data_in_room_wating_for_update[key].roomId + "/content").push({
                 text: data_in_room_wating_for_update[key].text,
                 userId: data_in_room_wating_for_update[key].userId,
@@ -769,8 +769,8 @@ function _uploadText() {
     clearTimeout(timerForUpload);
     pushContentInGroup();
     pushContentInRoom();
-    // 每10分鐘上傳一次資料
-    timerForUpload = setInterval(_uploadText, 600000);
+    // 每1分鐘上傳一次資料
+    timerForUpload = setInterval(_uploadText, 60000);
     console.log("textUpload");
 }
 
