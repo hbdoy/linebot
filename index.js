@@ -25,7 +25,7 @@ var bot = linebot({
     channelAccessToken: process.env.channelAccessToken
 });
 
-var timerForToken, timerForImg, timerForUpload, timerForLuck;
+var timerForToken, timerForImg, timerForUploadGT, timerForUploadRT, timerForLuck;
 var myToken = '';
 var NCNUPosts = [],
     NCNUPostsW = [],
@@ -721,19 +721,24 @@ function pushGroup(tmp) {
 }
 
 function pushContentInGroup() {
-    var lastKey = 0;
-    for (var key in data_in_group_wating_for_update) {
-        if (data_in_group_wating_for_update[key].text != "") {
-            db.ref("/group/" + data_in_group_wating_for_update[key].groupId + "/content").push({
-                text: data_in_group_wating_for_update[key].text,
-                userId: data_in_group_wating_for_update[key].userId,
-                createTime: data_in_group_wating_for_update[key].createTime
-            });
-            lastKey = key;
+    clearTimeout(timerForUploadGT);
+    var lastKey = data_in_group_wating_for_update.length;
+    if(lastKey != 0){
+        for (let i = 0; i < lastKey; i++) {
+            if (data_in_group_wating_for_update[i].text != "") {
+                db.ref("/group/" + data_in_group_wating_for_update[i].groupId + "/content").push({
+                    text: data_in_group_wating_for_update[i].text,
+                    userId: data_in_group_wating_for_update[i].userId,
+                    createTime: data_in_group_wating_for_update[i].createTime
+                });
+            }
         }
+        // 上傳完就清空
+        data_in_group_wating_for_update.splice(0, lastKey);
     }
-    // 上傳完就清空
-    data_in_group_wating_for_update.splice(0, lastKey + 1);
+    // 每1分鐘上傳一次資料
+    timerForUploadGT = setInterval(pushContentInGroup, 60000);
+    console.log("GroupTextUpload");
 }
 
 function pushRoom(tmp) {
@@ -751,27 +756,29 @@ function pushRoom(tmp) {
 }
 
 function pushContentInRoom() {
-    var lastKey = 0;
-    for (var key in data_in_room_wating_for_update) {
-        if (data_in_room_wating_for_update[key].text != "") {
-            db.ref("/room/" + data_in_room_wating_for_update[key].roomId + "/content").push({
-                text: data_in_room_wating_for_update[key].text,
-                userId: data_in_room_wating_for_update[key].userId,
-                createTime: data_in_room_wating_for_update[key].createTime
-            });
+    clearTimeout(timerForUploadRT);
+    var lastKey = data_in_room_wating_for_update.length;
+    if(lastKey != 0){
+        for (let i = 0; i < lastKey; i++) {
+            if (data_in_room_wating_for_update[i].text != "") {
+                db.ref("/room/" + data_in_room_wating_for_update[i].roomId + "/content").push({
+                    text: data_in_room_wating_for_update[i].text,
+                    userId: data_in_room_wating_for_update[i].userId,
+                    createTime: data_in_room_wating_for_update[i].createTime
+                });
+            }
         }
+        // 上傳完就清空
+        data_in_room_wating_for_update.splice(0, lastKey);
     }
-    // 上傳完就清空
-    data_in_room_wating_for_update.splice(0, lastKey + 1);
+    // 每1分鐘上傳一次資料
+    timerForUploadRT = setInterval(pushContentInRoom, 60000);
+    console.log("RoomTextUpload");
 }
 
 function _uploadText() {
-    clearTimeout(timerForUpload);
     pushContentInGroup();
     pushContentInRoom();
-    // 每1分鐘上傳一次資料
-    timerForUpload = setInterval(_uploadText, 60000);
-    console.log("textUpload");
 }
 
 // 新增當地時區的時間物件
