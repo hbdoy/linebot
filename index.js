@@ -623,33 +623,33 @@ function _getBeautyImg() {
     timerForImg = setInterval(_getBeautyImg, 3600000);
 }
 
-function reflashToken() {
-    clearTimeout(timerForToken);
-    var url = "https://developers.facebook.com/tools/explorer";
-    var myCookie = "c_user=100003315001440;xs=203%3AJlb6EiLMTPV8ug%3A2%3A1528476988%3A11327%3A11322";
-    superagent.get(url)
-        .set("Cookie", myCookie)
-        .end(function (err, res) {
-            if (err) {
-                throw err;
-            };
-            // console.log(JSON.stringify(res));
-            var tmp = JSON.stringify(res).split("accessToken");
-            var tmpp = tmp[2].split("appID");
-            var finalKey = tmpp[0].substr(5, 230).split("\\");
-            myToken = finalKey[0];
-            console.log("Token: reflash!");
-            // 抓取前先清空
-            NCNUPosts = [];
-            NCNUPostsW = [];
-            NCNUPostsM = [];
-            _getPosts();
-            _getPostsW();
-            _getPostsM();
-        })
-    // 每15分鐘抓取一次新資料
-    timerForToken = setInterval(reflashToken, 900000);
-}
+// function reflashToken() {
+//     clearTimeout(timerForToken);
+//     var url = "https://developers.facebook.com/tools/explorer";
+//     var myCookie = "c_user=100003315001440;xs=203%3AJlb6EiLMTPV8ug%3A2%3A1528476988%3A11327%3A11322";
+//     superagent.get(url)
+//         .set("Cookie", myCookie)
+//         .end(function (err, res) {
+//             if (err) {
+//                 throw err;
+//             };
+//             // console.log(JSON.stringify(res));
+//             var tmp = JSON.stringify(res).split("accessToken");
+//             var tmpp = tmp[2].split("appID");
+//             var finalKey = tmpp[0].substr(5, 230).split("\\");
+//             myToken = finalKey[0];
+//             console.log("Token: reflash!");
+//             // 抓取前先清空
+//             NCNUPosts = [];
+//             NCNUPostsW = [];
+//             NCNUPostsM = [];
+//             _getPosts();
+//             _getPostsW();
+//             _getPostsM();
+//         })
+//     // 每15分鐘抓取一次新資料
+//     timerForToken = setInterval(reflashToken, 900000);
+// }
 
 function pushUserData(tmp) {
     // 大雷: 使用者在group中，資料抓不到statusMsg
